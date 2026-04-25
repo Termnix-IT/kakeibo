@@ -79,7 +79,7 @@ function ReportSkeleton() {
           <Skeleton width={100} height={28} rounded="sm" />
         </CardHeader>
         <CardBody>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-grid md:grid-cols-3">
             {[0, 1, 2].map((i) => (
               <div key={i} className="space-y-2 border-l-2 border-neutral-200 pl-4">
                 <Skeleton width={60} height={10} />
@@ -89,7 +89,7 @@ function ReportSkeleton() {
           </div>
         </CardBody>
       </Card>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-grid md:grid-cols-2">
         {[0, 1].map((i) => (
           <Card key={i}>
             <CardHeader>
@@ -255,7 +255,7 @@ function MonthlyReport({
           </Button>
         </CardHeader>
         <CardBody>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-grid md:grid-cols-3">
             <Stat label="収入" tone="income" value={fmt(totalIncome)} />
             <Stat label="支出" tone="expense" value={fmt(totalExpense)} />
             <Stat
@@ -330,7 +330,7 @@ function MonthlyReport({
         </CardBody>
       </Card>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-grid md:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>カテゴリ別支出ランキング</CardTitle>
@@ -563,7 +563,7 @@ function AnnualReport({
           </div>
         </CardHeader>
         <CardBody>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-grid md:grid-cols-3">
             <Stat label="年間収入" tone="income" value={fmt(totalIncome)} />
             <Stat label="年間支出" tone="expense" value={fmt(totalExpense)} />
             <Stat
@@ -640,7 +640,7 @@ export function Report() {
 
   return (
     <div className="h-full overflow-y-auto pb-24 md:pb-6">
-      <div className="page-frame space-y-4 px-4 py-4 md:px-0 md:py-0">
+      <div className="page-frame space-y-section pad-page md:p-0">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="eyebrow-label text-neutral-500">レポート</p>

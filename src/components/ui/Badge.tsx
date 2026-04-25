@@ -16,12 +16,18 @@ export type BadgeProps = HTMLAttributes<HTMLSpanElement> & {
 };
 
 const TONE: Record<BadgeTone, string> = {
-  neutral: 'bg-neutral-100 text-neutral-700 border border-neutral-200',
-  income: 'bg-income-subtle text-income border border-[#bfdbfe]',
-  expense: 'bg-expense-subtle text-expense border border-[#fecaca]',
-  success: 'bg-success-subtle text-success border border-[#a7f3d0]',
-  warning: 'bg-warning-subtle text-warning border border-[#fde68a]',
-  primary: 'bg-primary-subtle text-primary border border-primary-border',
+  neutral:
+    'bg-[var(--color-surface-2)] text-neutral-700 border border-[var(--color-surface-border-strong)]',
+  income:
+    'bg-[rgba(34,211,238,0.12)] text-[#67e8f9] border border-[rgba(34,211,238,0.45)]',
+  expense:
+    'bg-[rgba(236,72,153,0.12)] text-[#f9a8d4] border border-[rgba(236,72,153,0.45)]',
+  success:
+    'bg-[rgba(16,224,160,0.12)] text-[#5eead4] border border-[rgba(16,224,160,0.45)]',
+  warning:
+    'bg-[rgba(251,146,60,0.12)] text-[#fdba74] border border-[rgba(251,146,60,0.45)]',
+  primary:
+    'bg-[rgba(34,211,238,0.12)] text-[#67e8f9] border border-[rgba(34,211,238,0.45)]',
 };
 
 const SIZE: Record<BadgeSize, string> = {

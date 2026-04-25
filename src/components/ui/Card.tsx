@@ -4,23 +4,38 @@ function cx(...parts: (string | undefined | false)[]) {
   return parts.filter(Boolean).join(' ');
 }
 
-export function Card({ className, ...rest }: HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      className={cx(
-        'rounded-md border border-neutral-200 bg-white',
-        className
-      )}
-      {...rest}
-    />
-  );
+export type CardTone =
+  | 'default'
+  | 'cyan'
+  | 'pink'
+  | 'blue'
+  | 'green'
+  | 'purple'
+  | 'orange';
+
+const TONE_CLASS: Record<CardTone, string> = {
+  default: 'neon-card',
+  cyan: 'neon-card neon-card-cyan',
+  pink: 'neon-card neon-card-pink',
+  blue: 'neon-card neon-card-blue',
+  green: 'neon-card neon-card-green',
+  purple: 'neon-card neon-card-purple',
+  orange: 'neon-card neon-card-orange',
+};
+
+export type CardProps = HTMLAttributes<HTMLDivElement> & {
+  tone?: CardTone;
+};
+
+export function Card({ className, tone = 'default', ...rest }: CardProps) {
+  return <div className={cx(TONE_CLASS[tone], className)} {...rest} />;
 }
 
 export function CardHeader({ className, ...rest }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={cx(
-        'flex items-center justify-between gap-3 border-b border-neutral-200 px-5 py-3',
+        'flex items-center justify-between gap-3 border-b border-[var(--color-surface-border)] pad-card-x py-3',
         className
       )}
       {...rest}
@@ -50,14 +65,14 @@ export function CardDescription({
 }
 
 export function CardBody({ className, ...rest }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={cx('px-5 py-4', className)} {...rest} />;
+  return <div className={cx('pad-card', className)} {...rest} />;
 }
 
 export function CardFooter({ className, ...rest }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={cx(
-        'flex items-center justify-end gap-2 border-t border-neutral-200 px-5 py-3',
+        'flex items-center justify-end gap-2 border-t border-[var(--color-surface-border)] pad-card-x py-3',
         className
       )}
       {...rest}

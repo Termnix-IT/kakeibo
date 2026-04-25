@@ -25,7 +25,7 @@ export type StatProps = {
 };
 
 const TONE_BORDER: Record<StatTone, string> = {
-  neutral: 'border-neutral-300',
+  neutral: 'border-[var(--color-surface-border-strong)]',
   income: 'border-income',
   expense: 'border-expense',
   success: 'border-success',
@@ -35,11 +35,11 @@ const TONE_BORDER: Record<StatTone, string> = {
 
 const TONE_VALUE: Record<StatTone, string> = {
   neutral: 'text-neutral-900',
-  income: 'text-income',
-  expense: 'text-expense',
-  success: 'text-success',
-  warning: 'text-warning',
-  primary: 'text-primary',
+  income: 'neon-text-cyan',
+  expense: 'neon-text-pink',
+  success: 'neon-text-green',
+  warning: 'neon-text-orange',
+  primary: 'neon-text-cyan',
 };
 
 const DELTA_COLOR: Record<StatDeltaTone, string> = {

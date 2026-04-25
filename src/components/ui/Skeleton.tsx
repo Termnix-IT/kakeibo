@@ -27,7 +27,7 @@ export function Skeleton({
     merged.height = typeof height === 'number' ? `${height}px` : height;
   return (
     <div
-      className={`animate-pulse bg-neutral-200/80 ${ROUND[rounded]} ${className}`}
+      className={`animate-pulse bg-[var(--color-surface-2)] ${ROUND[rounded]} ${className}`}
       style={merged}
       {...rest}
     />

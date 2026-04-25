@@ -13,14 +13,17 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const BASE =
-  'inline-flex items-center justify-center gap-1.5 rounded-md font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap';
+  'inline-flex items-center justify-center gap-1.5 rounded-md font-medium transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap';
 
 const VARIANTS: Record<ButtonVariant, string> = {
-  primary: 'bg-primary text-white hover:bg-primary-hover',
+  primary:
+    'bg-gradient-to-r from-[#22d3ee] to-[#0891b2] text-[#04111c] hover:from-[#67e8f9] hover:to-[#06b6d4] hover:shadow-[0_0_18px_rgba(34,211,238,0.45)]',
   secondary:
-    'border border-neutral-300 bg-white text-neutral-700 hover:bg-neutral-50',
-  ghost: 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900',
-  danger: 'bg-expense text-white hover:bg-[#991b1b]',
+    'border border-[rgba(34,211,238,0.35)] bg-[rgba(34,211,238,0.06)] text-neutral-800 hover:bg-[rgba(34,211,238,0.12)] hover:border-[rgba(34,211,238,0.6)]',
+  ghost:
+    'text-neutral-600 hover:bg-[rgba(34,211,238,0.08)] hover:text-neutral-900',
+  danger:
+    'bg-gradient-to-r from-[#ec4899] to-[#be185d] text-white hover:shadow-[0_0_18px_rgba(236,72,153,0.45)]',
 };
 
 const SIZES: Record<ButtonSize, string> = {

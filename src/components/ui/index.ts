@@ -8,6 +8,7 @@ export {
   CardHeader,
   CardTitle,
 } from './Card';
+export type { CardProps, CardTone } from './Card';
 export { Modal, ModalFooter } from './Modal';
 export type { ModalProps, ModalSize } from './Modal';
 export { Input } from './Input';

@@ -23,7 +23,7 @@ export function Tabs<T extends string>({
   return (
     <div
       role="tablist"
-      className={`inline-flex gap-0.5 rounded-md border border-neutral-200 bg-neutral-100 p-0.5 ${className}`}
+      className={`inline-flex gap-0.5 rounded-md border border-[var(--color-surface-border)] bg-[var(--color-surface)] p-0.5 ${className}`}
     >
       {items.map((it) => {
         const active = it.value === value;
@@ -34,10 +34,10 @@ export function Tabs<T extends string>({
             aria-selected={active}
             type="button"
             onClick={() => onChange(it.value)}
-            className={`inline-flex items-center justify-center rounded-[6px] font-medium transition-colors ${SIZE[size]} ${
+            className={`inline-flex items-center justify-center rounded-[6px] font-medium transition-all ${SIZE[size]} ${
               active
-                ? 'bg-white text-neutral-900 shadow-sm'
-                : 'text-neutral-500 hover:text-neutral-800'
+                ? 'bg-[rgba(34,211,238,0.15)] text-[#67e8f9] shadow-[0_0_12px_rgba(34,211,238,0.3)] border border-[rgba(34,211,238,0.4)]'
+                : 'text-neutral-500 hover:text-neutral-800 border border-transparent'
             }`}
           >
             {it.label}

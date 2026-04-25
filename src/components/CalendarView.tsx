@@ -60,7 +60,7 @@ export function CalendarView({
 
   return (
     <div className="flex h-full flex-col md:flex-row md:gap-3">
-      <div className="overflow-hidden rounded-md border border-neutral-200 bg-white md:flex-1">
+      <div className="overflow-hidden rounded-md border border-[var(--color-surface-border)] bg-[var(--color-surface)] md:flex-1">
         <div className="grid grid-cols-7 border-b border-neutral-100">
           {DAY_NAMES.map((d, i) => (
             <div
@@ -97,7 +97,7 @@ export function CalendarView({
               : 0;
             const heatStyle =
               heatOpacity > 0 && !isSelected
-                ? { backgroundColor: `rgba(185,28,28,${heatOpacity})` }
+                ? { backgroundColor: `rgba(236,72,153,${heatOpacity})` }
                 : {};
 
             return (
@@ -105,7 +105,7 @@ export function CalendarView({
                 key={dateStr}
                 onClick={() => onDaySelect(dateStr)}
                 className={`flex min-h-[68px] flex-col items-center gap-0.5 border-b border-r border-neutral-100 p-1.5 transition-colors md:min-h-[76px] ${
-                  isSelected ? 'bg-primary-subtle' : 'hover:bg-neutral-50'
+                  isSelected ? 'bg-[rgba(34,211,238,0.12)]' : 'hover:bg-[rgba(34,211,238,0.06)]'
                 }`}
                 style={heatStyle}
               >
@@ -114,7 +114,7 @@ export function CalendarView({
                     isToday
                       ? 'bg-primary text-white'
                       : isSelected
-                        ? 'bg-white text-primary'
+                        ? 'bg-[var(--color-surface)] text-primary'
                         : isSun
                           ? 'text-expense'
                           : isSat
@@ -150,7 +150,7 @@ export function CalendarView({
 
       <div className={`md:w-72 md:shrink-0 ${selectedDate ? 'block' : 'hidden md:block'}`}>
         {selectedDate ? (
-          <div className="overflow-hidden rounded-md border border-neutral-200 bg-white">
+          <div className="overflow-hidden rounded-md border border-[var(--color-surface-border)] bg-[var(--color-surface)]">
             <div className="flex items-center justify-between border-b border-neutral-100 px-4 py-2.5">
               <div>
                 <p className="text-sm font-semibold text-neutral-900">

@@ -1,64 +1,104 @@
 @import "tailwindcss";
 
 @theme {
-  /* Neutral scale */
-  --color-neutral-50: #f8fafc;
-  --color-neutral-100: #f1f5f9;
-  --color-neutral-200: #e2e8f0;
-  --color-neutral-300: #cbd5e1;
-  --color-neutral-400: #94a3b8;
-  --color-neutral-500: #64748b;
-  --color-neutral-600: #475569;
-  --color-neutral-700: #334155;
-  --color-neutral-800: #1e293b;
-  --color-neutral-900: #0f172a;
+  /* Neutral scale — inverted for dark theme.
+     既存クラス (bg-neutral-50 / text-neutral-900 等) を流用するため、
+     0..900 の階層を「暗→明」に再マッピング。 */
+  --color-neutral-50: #060916;   /* 旧: 最明 → 最暗 (page bg) */
+  --color-neutral-100: #0d1224;  /* card surface */
+  --color-neutral-200: #1f2842;  /* divider / soft border */
+  --color-neutral-300: #2a3454;  /* strong border */
+  --color-neutral-400: #5a6280;  /* faint icon */
+  --color-neutral-500: #8a93ab;  /* muted text */
+  --color-neutral-600: #b1b8cd;  /* secondary text */
+  --color-neutral-700: #d0d6e3;  /* body text */
+  --color-neutral-800: #e7eaf3;  /* heading */
+  --color-neutral-900: #f5f7ff;  /* high-emphasis */
 
-  /* Brand & semantic */
-  --color-primary: #2563eb;
-  --color-primary-hover: #1d4ed8;
-  --color-primary-dark: #1e40af;
-  --color-primary-subtle: #eff6ff;
-  --color-primary-border: #bfdbfe;
+  /* Brand & semantic — neon palette */
+  --color-primary: #22d3ee;
+  --color-primary-hover: #06b6d4;
+  --color-primary-dark: #0891b2;
+  --color-primary-subtle: rgba(34, 211, 238, 0.12);
+  --color-primary-border: rgba(34, 211, 238, 0.45);
 
-  --color-income: #1d4ed8;
-  --color-income-subtle: #eff6ff;
-  --color-expense: #b91c1c;
-  --color-expense-subtle: #fef2f2;
-  --color-success: #047857;
-  --color-success-subtle: #ecfdf5;
-  --color-warning: #b45309;
-  --color-warning-subtle: #fffbeb;
-  --color-danger: #b91c1c;
+  --color-income: #22d3ee;
+  --color-income-subtle: rgba(34, 211, 238, 0.10);
+  --color-expense: #ec4899;
+  --color-expense-subtle: rgba(236, 72, 153, 0.10);
+  --color-success: #10e0a0;
+  --color-success-subtle: rgba(16, 224, 160, 0.10);
+  --color-warning: #fb923c;
+  --color-warning-subtle: rgba(251, 146, 60, 0.12);
+  --color-warning-border: rgba(251, 146, 60, 0.45);
+  --color-danger: #ec4899;
+
+  /* Surfaces (新規) */
+  --color-bg: #060916;
+  --color-surface: #0d1224;
+  --color-surface-2: #141a30;
+  --color-surface-3: #1a223a;
+  --color-surface-border: #1f2842;
+  --color-surface-border-strong: #2a3454;
+
+  /* Neon palette (KPIカードや装飾用) */
+  --color-neon-cyan: #22d3ee;
+  --color-neon-pink: #ec4899;
+  --color-neon-blue: #3b82f6;
+  --color-neon-green: #10e0a0;
+  --color-neon-purple: #a855f7;
+  --color-neon-orange: #fb923c;
+  --color-neon-yellow: #facc15;
 
   /* Radius scale */
   --radius-xs: 4px;
   --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 10px;
-  --radius-xl: 14px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
 
   /* Typography */
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 
   /* Chart palette */
-  --chart-1: #2563eb;
-  --chart-2: #0891b2;
-  --chart-3: #059669;
-  --chart-4: #d97706;
-  --chart-5: #b91c1c;
-  --chart-6: #7c3aed;
-  --chart-grid: #e2e8f0;
-  --chart-axis: #64748b;
+  --chart-1: #22d3ee;
+  --chart-2: #ec4899;
+  --chart-3: #10e0a0;
+  --chart-4: #a855f7;
+  --chart-5: #fb923c;
+  --chart-6: #facc15;
+  --chart-grid: #1f2842;
+  --chart-axis: #5a6280;
+}
+
+/* ----- Responsive spacing tokens -----
+   ビューポート幅に応じて clamp で滑らかに変化する余白トークン。
+   モバイル(~375px) → タブレット(~768px) → デスクトップ(~1280px) で連続的にスケール。 */
+:root {
+  --space-page-x: clamp(0.75rem, 2.4vw, 2rem);    /* ページ左右余白 */
+  --space-page-y: clamp(0.75rem, 1.6vw, 1.5rem);  /* ページ上下余白 */
+  --space-card-x: clamp(0.875rem, 1.4vw + 0.5rem, 1.5rem); /* カード横padding */
+  --space-card-y: clamp(0.625rem, 0.8vw + 0.4rem, 1rem);   /* カード縦padding */
+  --space-grid-gap: clamp(0.625rem, 1vw + 0.3rem, 1.25rem); /* グリッドgap */
+  --space-section-gap: clamp(0.75rem, 1.2vw + 0.4rem, 1.5rem); /* セクション間隔 */
+  --space-sidebar-x: clamp(0.625rem, 0.6vw + 0.4rem, 0.875rem);
+  --space-sidebar-y: clamp(0.5rem, 0.5vw + 0.25rem, 0.75rem);
+  --space-header-y: clamp(0.5rem, 0.6vw + 0.25rem, 0.875rem);
 }
 
 html {
-  background: var(--color-neutral-50);
+  background: var(--color-bg);
 }
 
 body {
   min-height: 100vh;
-  background: var(--color-neutral-50);
-  color: var(--color-neutral-700);
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(34, 211, 238, 0.08), transparent 50%),
+    radial-gradient(ellipse at 100% 100%, rgba(168, 85, 247, 0.08), transparent 55%),
+    radial-gradient(ellipse at 50% 50%, rgba(236, 72, 153, 0.04), transparent 60%),
+    var(--color-bg);
+  background-attachment: fixed;
+  color: var(--color-neutral-800);
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue",
     "ヒラギノ角ゴ ProN", "Hiragino Kaku Gothic ProN", "Yu Gothic UI",
     "メイリオ", Meiryo, Arial, sans-serif;
@@ -81,22 +121,23 @@ textarea {
 .eyebrow-label {
   font-size: 0.6875rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--color-neutral-500);
 }
 
 .page-title {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  line-height: 1.4;
+  line-height: 1.3;
   color: var(--color-neutral-900);
+  letter-spacing: 0.01em;
 }
 
 .stat-label {
   font-size: 0.6875rem;
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--color-neutral-500);
 }
@@ -104,5 +145,163 @@ textarea {
 .page-frame {
   margin-inline: auto;
   width: 100%;
-  max-width: 72rem;
+  max-width: 84rem;
+}
+
+/* レスポンシブ余白用ユーティリティ */
+@layer utilities {
+  .pad-page-x { padding-inline: var(--space-page-x); }
+  .pad-page-y { padding-block: var(--space-page-y); }
+  .pad-page { padding: var(--space-page-y) var(--space-page-x); }
+  .pad-card { padding: var(--space-card-y) var(--space-card-x); }
+  .pad-card-x { padding-inline: var(--space-card-x); }
+  .pad-card-y { padding-block: var(--space-card-y); }
+  .gap-grid { gap: var(--space-grid-gap); }
+  .gap-section { gap: var(--space-section-gap); }
+  .space-y-section > :not(:first-child) { margin-top: var(--space-section-gap); }
+}
+
+/* ----- Neon utilities ----- */
+
+@layer utilities {
+  .neon-card {
+    position: relative;
+    background: linear-gradient(
+      180deg,
+      rgba(20, 26, 48, 0.92),
+      rgba(13, 18, 36, 0.92)
+    );
+    border: 1px solid var(--color-surface-border);
+    border-radius: 14px;
+    box-shadow:
+      0 0 0 1px rgba(34, 211, 238, 0.04),
+      0 12px 32px rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(8px);
+  }
+
+  .neon-card-cyan {
+    border-color: rgba(34, 211, 238, 0.45);
+    box-shadow:
+      0 0 28px rgba(34, 211, 238, 0.18),
+      inset 0 0 24px rgba(34, 211, 238, 0.05),
+      0 12px 32px rgba(0, 0, 0, 0.45);
+  }
+  .neon-card-pink {
+    border-color: rgba(236, 72, 153, 0.45);
+    box-shadow:
+      0 0 28px rgba(236, 72, 153, 0.18),
+      inset 0 0 24px rgba(236, 72, 153, 0.05),
+      0 12px 32px rgba(0, 0, 0, 0.45);
+  }
+  .neon-card-blue {
+    border-color: rgba(59, 130, 246, 0.45);
+    box-shadow:
+      0 0 28px rgba(59, 130, 246, 0.18),
+      inset 0 0 24px rgba(59, 130, 246, 0.05),
+      0 12px 32px rgba(0, 0, 0, 0.45);
+  }
+  .neon-card-green {
+    border-color: rgba(16, 224, 160, 0.45);
+    box-shadow:
+      0 0 28px rgba(16, 224, 160, 0.18),
+      inset 0 0 24px rgba(16, 224, 160, 0.05),
+      0 12px 32px rgba(0, 0, 0, 0.45);
+  }
+  .neon-card-purple {
+    border-color: rgba(168, 85, 247, 0.45);
+    box-shadow:
+      0 0 28px rgba(168, 85, 247, 0.18),
+      inset 0 0 24px rgba(168, 85, 247, 0.05),
+      0 12px 32px rgba(0, 0, 0, 0.45);
+  }
+  .neon-card-orange {
+    border-color: rgba(251, 146, 60, 0.45);
+    box-shadow:
+      0 0 28px rgba(251, 146, 60, 0.18),
+      inset 0 0 24px rgba(251, 146, 60, 0.05),
+      0 12px 32px rgba(0, 0, 0, 0.45);
+  }
+
+  .neon-text-cyan {
+    color: var(--color-neon-cyan);
+    text-shadow: 0 0 14px rgba(34, 211, 238, 0.55);
+  }
+  .neon-text-pink {
+    color: var(--color-neon-pink);
+    text-shadow: 0 0 14px rgba(236, 72, 153, 0.55);
+  }
+  .neon-text-blue {
+    color: var(--color-neon-blue);
+    text-shadow: 0 0 14px rgba(59, 130, 246, 0.55);
+  }
+  .neon-text-green {
+    color: var(--color-neon-green);
+    text-shadow: 0 0 14px rgba(16, 224, 160, 0.55);
+  }
+  .neon-text-purple {
+    color: var(--color-neon-purple);
+    text-shadow: 0 0 14px rgba(168, 85, 247, 0.55);
+  }
+  .neon-text-orange {
+    color: var(--color-neon-orange);
+    text-shadow: 0 0 14px rgba(251, 146, 60, 0.55);
+  }
+
+  .neon-divider {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(34, 211, 238, 0.4),
+      transparent
+    );
+    height: 1px;
+    width: 100%;
+  }
+
+  /* Hexagon button used for "クイックアクション" */
+  .hex-button {
+    clip-path: polygon(
+      25% 4%,
+      75% 4%,
+      100% 50%,
+      75% 96%,
+      25% 96%,
+      0 50%
+    );
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(34, 211, 238, 0.3) transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgba(34, 211, 238, 0.25);
+    border-radius: 3px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+/* Recharts のデフォルトスタイル微調整 */
+.recharts-default-tooltip {
+  background-color: var(--color-surface) !important;
+  border: 1px solid rgba(34, 211, 238, 0.4) !important;
+  border-radius: 8px !important;
+  color: var(--color-neutral-800) !important;
+}
+
+.recharts-tooltip-label,
+.recharts-tooltip-item {
+  color: var(--color-neutral-800) !important;
+}
+
+input[type="month"]::-webkit-calendar-picker-indicator,
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.8) hue-rotate(160deg);
+  cursor: pointer;
 }

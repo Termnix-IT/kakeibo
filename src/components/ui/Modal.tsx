@@ -46,15 +46,15 @@ export function Modal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-900/40 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#020410]/80 p-4 backdrop-blur-sm"
       onClick={(e) => {
         if (closeOnOverlay && e.target === e.currentTarget) onClose();
       }}
     >
       <div
-        className={`w-full ${SIZE_CLASS[size]} max-h-[min(100vh-2rem,720px)] flex flex-col overflow-hidden rounded-md border border-neutral-200 bg-white shadow-xl`}
+        className={`w-full ${SIZE_CLASS[size]} max-h-[min(100vh-2rem,720px)] flex flex-col overflow-hidden neon-card neon-card-cyan`}
       >
-        <div className="flex items-start justify-between gap-3 border-b border-neutral-200 px-5 py-3">
+        <div className="flex items-start justify-between gap-3 border-b border-[var(--color-surface-border)] pad-card-x py-3">
           <div>
             <h2 className="text-sm font-semibold text-neutral-900">{title}</h2>
             {description ? (
@@ -65,9 +65,9 @@ export function Modal({
             <X size={16} />
           </IconButton>
         </div>
-        <div className="flex-1 overflow-y-auto px-5 py-4">{children}</div>
+        <div className="flex-1 overflow-y-auto scrollbar-thin pad-card">{children}</div>
         {footer ? (
-          <div className="flex items-center justify-end gap-2 border-t border-neutral-200 px-5 py-3">
+          <div className="flex items-center justify-end gap-2 border-t border-[var(--color-surface-border)] pad-card-x py-3">
             {footer}
           </div>
         ) : null}

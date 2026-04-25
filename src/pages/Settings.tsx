@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import {
   Bell,
@@ -162,7 +162,7 @@ function CategoryModal({ initial, existingNames, onClose, onSave }: CategoryModa
                 className={`h-9 rounded-md border text-sm font-medium transition-colors ${
                   type === opt.value
                     ? 'border-primary bg-primary-subtle text-primary'
-                    : 'border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50'
+                    : 'border-[var(--color-surface-border-strong)] bg-[var(--color-surface-2)] text-neutral-700 hover:border-[rgba(34,211,238,0.4)] hover:text-neutral-900'
                 }`}
               >
                 {opt.label}
@@ -425,7 +425,7 @@ function BankImportModal({ categories, onClose }: BankImportProps) {
                   className={`rounded-md border px-3 py-2 text-sm transition-colors ${
                     format === f.id
                       ? 'border-primary bg-primary-subtle text-primary font-medium'
-                      : 'border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50'
+                      : 'border-[var(--color-surface-border-strong)] bg-[var(--color-surface-2)] text-neutral-700 hover:border-[rgba(34,211,238,0.4)] hover:text-neutral-900'
                   }`}
                 >
                   {f.name}
@@ -537,7 +537,7 @@ function BankImportModal({ categories, onClose }: BankImportProps) {
 function SettingsSkeleton() {
   return (
     <div className="h-full overflow-y-auto pb-24 md:pb-6">
-      <div className="page-frame space-y-5 px-4 py-5 md:px-0 md:py-0">
+      <div className="page-frame space-y-section pad-page md:p-0">
         <Card>
           <CardHeader>
             <div className="space-y-2">
@@ -546,7 +546,7 @@ function SettingsSkeleton() {
             </div>
           </CardHeader>
         </Card>
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-grid lg:grid-cols-2">
           {[0, 1, 2, 3, 4, 5].map((i) => (
             <Card key={i}>
               <CardHeader>
@@ -569,7 +569,11 @@ function SettingsSkeleton() {
   );
 }
 
-export function Settings() {
+type SettingsProps = {
+  scrollToSection?: 'budgets' | 'goals' | 'backup' | null;
+};
+
+export function Settings({ scrollToSection }: SettingsProps = {}) {
   const categories = useLiveQuery(() => db.categories.toArray(), []);
   const budgets = useLiveQuery(() => db.budgets.toArray(), []);
   const fixedCosts = useLiveQuery(() => db.fixedCosts.toArray(), []);
@@ -588,6 +592,16 @@ export function Settings() {
   const [notifPermission, setNotifPermission] = useState<NotificationPermission>(
     typeof Notification !== 'undefined' ? Notification.permission : 'default'
   );
+
+  useEffect(() => {
+    if (!scrollToSection) return;
+    if (!categories || !budgets || !fixedCosts || !goals) return;
+    const id = window.setTimeout(() => {
+      const el = document.getElementById(`settings-${scrollToSection}`);
+      el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
+    return () => window.clearTimeout(id);
+  }, [scrollToSection, categories, budgets, fixedCosts, goals]);
 
   if (!categories || !budgets || !fixedCosts || !goals) {
     return <SettingsSkeleton />;
@@ -749,7 +763,7 @@ export function Settings() {
 
   return (
     <div className="h-full overflow-y-auto pb-24 md:pb-6">
-      <div className="page-frame space-y-5 px-4 py-5 md:px-0 md:py-0">
+      <div className="page-frame space-y-section pad-page md:p-0">
         <div>
           <p className="eyebrow-label text-neutral-500">管理メニュー</p>
           <h1 className="page-title mt-0.5">設定</h1>
@@ -913,7 +927,7 @@ export function Settings() {
           </Card>
 
           {/* 貯蓄目標 */}
-          <Card>
+          <Card id="settings-goals">
             <CardHeader>
               <div>
                 <CardTitle>貯蓄目標</CardTitle>
@@ -991,7 +1005,7 @@ export function Settings() {
           </Card>
 
           {/* 月次予算設定 */}
-          <Card>
+          <Card id="settings-budgets">
             <CardHeader>
               <div>
                 <CardTitle>月次予算設定</CardTitle>
@@ -1117,7 +1131,7 @@ export function Settings() {
           </Card>
 
           {/* エクスポート・インポート */}
-          <Card className="lg:col-span-2">
+          <Card id="settings-backup" className="lg:col-span-2">
             <CardHeader>
               <div>
                 <CardTitle>エクスポート / インポート</CardTitle>

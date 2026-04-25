@@ -150,7 +150,7 @@ export function TransactionList({ month, onMonthChange }: Props) {
 
   return (
     <div className="flex h-full flex-col overflow-y-auto pb-28 md:pb-6">
-      <div className="page-frame space-y-4 px-4 py-4 md:px-0 md:py-0">
+      <div className="page-frame space-y-section pad-page md:p-0">
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
@@ -254,7 +254,7 @@ export function TransactionList({ month, onMonthChange }: Props) {
             </CardBody>
           )}
           <CardBody>
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            <div className="grid grid-cols-2 gap-grid md:grid-cols-4">
               <Stat label="収入" tone="income" value={fmt(totalIncome)} />
               <Stat label="支出" tone="expense" value={fmt(totalExpense)} />
               <Stat
@@ -325,7 +325,7 @@ export function TransactionList({ month, onMonthChange }: Props) {
                   .reduce((s, t) => s + t.amount, 0);
                 return (
                   <section key={date}>
-                    <div className="flex items-center justify-between bg-neutral-50 px-4 py-2 md:px-5">
+                    <div className="flex items-center justify-between bg-[var(--color-surface-2)] px-4 py-2 md:px-5">
                       <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500">
                         {date.slice(8)}日（{dayName}）
                       </span>
@@ -348,7 +348,7 @@ export function TransactionList({ month, onMonthChange }: Props) {
                         return (
                           <li
                             key={tx.id}
-                            className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-neutral-50 md:px-5"
+                            className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-[var(--color-surface-2)] md:px-5"
                           >
                             <div
                               className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-base"
