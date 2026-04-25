@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import {
   Bell,
@@ -14,6 +14,7 @@ import {
 import { db } from '../db';
 import type { Category, FixedCost, SavingsGoal } from '../types';
 import { exportJSON, importJSON } from '../utils/backup';
+import { clearAprilSeed, hasAprilSeed, seedAprilData } from '../utils/seedData';
 import { FixedCostModal } from '../components/FixedCostModal';
 import { BANK_FORMATS, parseCSVText, detectFormat } from '../utils/bankImport';
 import type { BankFormat, BankRow } from '../utils/bankImport';
@@ -569,11 +570,34 @@ function SettingsSkeleton() {
   );
 }
 
+export type SettingsSection =
+  | 'category'
+  | 'fixed'
+  | 'goals'
+  | 'budget'
+  | 'budgetAlert'
+  | 'app'
+  | 'backup'
+  | 'seed';
+
+const ALL_SECTIONS: SettingsSection[] = [
+  'category',
+  'fixed',
+  'goals',
+  'budget',
+  'budgetAlert',
+  'app',
+  'backup',
+  'seed',
+];
+
 type SettingsProps = {
-  scrollToSection?: 'budgets' | 'goals' | 'backup' | null;
+  sections?: SettingsSection[];
 };
 
-export function Settings({ scrollToSection }: SettingsProps = {}) {
+export function Settings({ sections = ALL_SECTIONS }: SettingsProps = {}) {
+  const visible = (k: SettingsSection) => sections.includes(k);
+  const showBudgetSave = visible('budget') || visible('budgetAlert');
   const categories = useLiveQuery(() => db.categories.toArray(), []);
   const budgets = useLiveQuery(() => db.budgets.toArray(), []);
   const fixedCosts = useLiveQuery(() => db.fixedCosts.toArray(), []);
@@ -592,16 +616,8 @@ export function Settings({ scrollToSection }: SettingsProps = {}) {
   const [notifPermission, setNotifPermission] = useState<NotificationPermission>(
     typeof Notification !== 'undefined' ? Notification.permission : 'default'
   );
-
-  useEffect(() => {
-    if (!scrollToSection) return;
-    if (!categories || !budgets || !fixedCosts || !goals) return;
-    const id = window.setTimeout(() => {
-      const el = document.getElementById(`settings-${scrollToSection}`);
-      el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 80);
-    return () => window.clearTimeout(id);
-  }, [scrollToSection, categories, budgets, fixedCosts, goals]);
+  const [seedMsg, setSeedMsg] = useState('');
+  const [seedBusy, setSeedBusy] = useState(false);
 
   if (!categories || !budgets || !fixedCosts || !goals) {
     return <SettingsSkeleton />;
@@ -757,6 +773,47 @@ export function Settings({ scrollToSection }: SettingsProps = {}) {
     setNotifPermission(perm);
   };
 
+  const handleSeedApril = async () => {
+    setSeedBusy(true);
+    try {
+      const already = await hasAprilSeed();
+      if (already) {
+        const ok = confirm(
+          '2026年4月の取引が既に存在します。サンプルデータを追加で投入しますか？'
+        );
+        if (!ok) {
+          setSeedBusy(false);
+          return;
+        }
+      }
+      const result = await seedAprilData();
+      const parts = [`取引 ${result.insertedTransactions} 件を追加`];
+      if (result.insertedCategories > 0) {
+        parts.push(`カテゴリ ${result.insertedCategories} 件を追加`);
+      }
+      setSeedMsg(parts.join(' / '));
+    } catch (err) {
+      setSeedMsg(err instanceof Error ? err.message : 'サンプル投入に失敗しました');
+    } finally {
+      setSeedBusy(false);
+      setTimeout(() => setSeedMsg(''), 4000);
+    }
+  };
+
+  const handleClearApril = async () => {
+    if (!confirm('2026年4月の取引をすべて削除します。よろしいですか？')) return;
+    setSeedBusy(true);
+    try {
+      const removed = await clearAprilSeed();
+      setSeedMsg(`取引 ${removed} 件を削除しました`);
+    } catch (err) {
+      setSeedMsg(err instanceof Error ? err.message : '削除に失敗しました');
+    } finally {
+      setSeedBusy(false);
+      setTimeout(() => setSeedMsg(''), 4000);
+    }
+  };
+
   const expenseCategories = categories.filter(
     (c) => c.type === 'expense' || c.type === 'both'
   );
@@ -764,16 +821,9 @@ export function Settings({ scrollToSection }: SettingsProps = {}) {
   return (
     <div className="h-full overflow-y-auto pb-24 md:pb-6">
       <div className="page-frame space-y-section pad-page md:p-0">
-        <div>
-          <p className="eyebrow-label text-neutral-500">管理メニュー</p>
-          <h1 className="page-title mt-0.5">設定</h1>
-          <p className="mt-1 text-xs text-neutral-500">
-            カテゴリ・固定費・予算・通知・バックアップをまとめて管理します。
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-grid lg:grid-cols-2">
           {/* カテゴリ管理 */}
+          {visible('category') && (
           <Card>
             <CardHeader>
               <div>
@@ -836,8 +886,10 @@ export function Settings({ scrollToSection }: SettingsProps = {}) {
               ))}
             </div>
           </Card>
+          )}
 
           {/* 固定費管理 */}
+          {visible('fixed') && (
           <Card>
             <CardHeader>
               <div>
@@ -925,9 +977,11 @@ export function Settings({ scrollToSection }: SettingsProps = {}) {
               </div>
             )}
           </Card>
+          )}
 
           {/* 貯蓄目標 */}
-          <Card id="settings-goals">
+          {visible('goals') && (
+          <Card>
             <CardHeader>
               <div>
                 <CardTitle>貯蓄目標</CardTitle>
@@ -1003,9 +1057,11 @@ export function Settings({ scrollToSection }: SettingsProps = {}) {
               </div>
             )}
           </Card>
+          )}
 
           {/* 月次予算設定 */}
-          <Card id="settings-budgets">
+          {visible('budget') && (
+          <Card>
             <CardHeader>
               <div>
                 <CardTitle>月次予算設定</CardTitle>
@@ -1056,8 +1112,10 @@ export function Settings({ scrollToSection }: SettingsProps = {}) {
               })}
             </div>
           </Card>
+          )}
 
           {/* 予算アラート閾値 */}
+          {visible('budgetAlert') && (
           <Card>
             <CardHeader>
               <div>
@@ -1095,8 +1153,10 @@ export function Settings({ scrollToSection }: SettingsProps = {}) {
               </div>
             </CardBody>
           </Card>
+          )}
 
           {/* アプリ設定 */}
+          {visible('app') && (
           <Card>
             <CardHeader>
               <div>
@@ -1129,9 +1189,52 @@ export function Settings({ scrollToSection }: SettingsProps = {}) {
               </div>
             </CardBody>
           </Card>
+          )}
+
+          {/* テストデータ投入 */}
+          {visible('seed') && (
+          <Card>
+            <CardHeader>
+              <div>
+                <CardTitle>テストデータ</CardTitle>
+                <CardDescription>
+                  2026年4月のサンプル収支を投入してダッシュボードを確認できます
+                </CardDescription>
+              </div>
+            </CardHeader>
+            <CardBody className="space-y-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <Button
+                  variant="primary"
+                  leftIcon={<Plus size={14} />}
+                  onClick={handleSeedApril}
+                  disabled={seedBusy}
+                >
+                  4月のサンプルを投入
+                </Button>
+                <Button
+                  variant="secondary"
+                  leftIcon={<X size={14} />}
+                  onClick={handleClearApril}
+                  disabled={seedBusy}
+                >
+                  4月の取引を削除
+                </Button>
+              </div>
+              <p className="text-[11px] text-neutral-500 leading-relaxed">
+                収入 ¥420,000 / 支出 ¥278,450 (住居・食費・交通・光熱費・娯楽・日用品・その他) の合計約25件を一括追加します。
+                光熱費カテゴリが無い場合は自動で作成されます。
+              </p>
+              {seedMsg ? (
+                <p className="text-center text-xs text-primary">{seedMsg}</p>
+              ) : null}
+            </CardBody>
+          </Card>
+          )}
 
           {/* エクスポート・インポート */}
-          <Card id="settings-backup" className="lg:col-span-2">
+          {visible('backup') && (
+          <Card className="lg:col-span-2">
             <CardHeader>
               <div>
                 <CardTitle>エクスポート / インポート</CardTitle>
@@ -1189,21 +1292,24 @@ export function Settings({ scrollToSection }: SettingsProps = {}) {
               ) : null}
             </CardBody>
           </Card>
+          )}
         </div>
 
-        {/* 保存ボタン */}
-        <Card>
-          <CardBody className="space-y-2">
-            {savedMsg ? (
-              <p className="text-center text-xs font-medium text-success">
-                {savedMsg}
-              </p>
-            ) : null}
-            <Button variant="primary" fullWidth onClick={handleSaveBudgets}>
-              予算を保存
-            </Button>
-          </CardBody>
-        </Card>
+        {/* 保存ボタン (予算系のみ) */}
+        {showBudgetSave && (
+          <Card>
+            <CardBody className="space-y-2">
+              {savedMsg ? (
+                <p className="text-center text-xs font-medium text-success">
+                  {savedMsg}
+                </p>
+              ) : null}
+              <Button variant="primary" fullWidth onClick={handleSaveBudgets}>
+                予算を保存
+              </Button>
+            </CardBody>
+          </Card>
+        )}
       </div>
 
       {editCat !== null && (

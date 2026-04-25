@@ -20,6 +20,7 @@ import { TransactionModal } from './components/TransactionModal';
 import { TransactionList } from './pages/TransactionList';
 import { db } from './db';
 import type { Transaction } from './types';
+import type { SettingsSection } from './pages/Settings';
 
 const Dashboard = lazy(async () => {
   const module = await import('./pages/Dashboard');
@@ -86,11 +87,11 @@ const PAGE_TITLES: Record<Page, { title: string; subtitle: string }> = {
   dashboard: { title: 'ダッシュボード', subtitle: '今月の家計の状況をひと目で把握' },
   transactions: { title: '収支明細', subtitle: '入力と確認' },
   report: { title: 'レポート', subtitle: '推移とカテゴリの分析' },
-  budget: { title: '予算管理', subtitle: 'カテゴリごとの予算と進捗' },
+  budget: { title: '予算管理', subtitle: 'カテゴリ別の月次予算とアラート閾値' },
   assets: { title: '資産管理', subtitle: '口座・資産の一覧（プレビュー）' },
-  goals: { title: '目標・貯金', subtitle: '目標の設定と達成度' },
-  settings: { title: '設定', subtitle: '各種設定' },
-  export: { title: 'データエクスポート', subtitle: 'CSV出力・バックアップ' },
+  goals: { title: '目標・貯金', subtitle: '貯蓄目標の設定と達成度' },
+  settings: { title: '設定', subtitle: 'カテゴリ・固定費・通知などのアプリ設定' },
+  export: { title: 'データエクスポート', subtitle: 'JSON バックアップ・銀行 CSV インポート' },
 };
 
 function AssetsComingSoon() {
@@ -154,15 +155,13 @@ export default function App() {
     </div>
   );
 
-  // budget / goals / export は Settings ページに集約済みのセクションへスクロール
-  const settingsAnchor =
-    page === 'budget'
-      ? 'budgets'
-      : page === 'goals'
-        ? 'goals'
-        : page === 'export'
-          ? 'backup'
-          : null;
+  // 各ページが Settings のどのセクションを表示するかのマッピング
+  const sectionsForPage: Record<string, SettingsSection[] | null> = {
+    budget: ['budget', 'budgetAlert'],
+    goals: ['goals'],
+    settings: ['category', 'fixed', 'app', 'seed'],
+    export: ['backup'],
+  };
 
   const renderPage = () => {
     if (page === 'transactions') {
@@ -171,13 +170,12 @@ export default function App() {
     if (page === 'assets') {
       return <AssetsComingSoon />;
     }
+    const settingsSections = sectionsForPage[page];
     return (
       <Suspense fallback={pageFallback}>
         {page === 'dashboard' && <Dashboard month={month} onMonthChange={setMonth} onQuickAdd={() => setShowModal(true)} onNavigate={setPage} />}
         {page === 'report' && <Report />}
-        {(page === 'settings' || page === 'budget' || page === 'goals' || page === 'export') && (
-          <Settings scrollToSection={settingsAnchor} />
-        )}
+        {settingsSections && <Settings sections={settingsSections} />}
       </Suspense>
     );
   };
@@ -187,11 +185,11 @@ export default function App() {
       <aside className="hidden shrink-0 md:sticky md:top-0 md:flex md:h-screen md:w-[clamp(15rem,18vw,18rem)] md:flex-col md:justify-between md:border-r md:border-[var(--color-surface-border)] md:bg-[var(--color-surface)]/80 md:backdrop-blur md:px-[var(--space-sidebar-x)] md:py-[var(--space-sidebar-y)]">
         <div className="space-y-2">
           <div className="flex items-center gap-2.5 pb-1">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-[#22d3ee] to-[#0891b2] shadow-[0_0_18px_rgba(34,211,238,0.5)]">
+            <div className="glow-pulse flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-[#22d3ee] to-[#0891b2] shadow-[0_0_18px_rgba(34,211,238,0.5)] text-[#22d3ee]">
               <Home size={18} className="text-[#04111c]" strokeWidth={2.5} />
             </div>
             <div className="min-w-0">
-              <p className="text-base font-bold neon-text-cyan leading-tight">家計簿</p>
+              <p className="glitch text-base font-bold neon-text-cyan leading-tight">家計簿</p>
               <p className="text-[10px] text-neutral-500 leading-tight">スマートに管理、未来をつくる</p>
             </div>
           </div>
@@ -206,7 +204,7 @@ export default function App() {
                   onClick={() => setPage(id)}
                   className={`group flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-left text-sm transition-all ${
                     active
-                      ? 'bg-[rgba(34,211,238,0.12)] text-[#67e8f9] border border-[rgba(34,211,238,0.4)] shadow-[0_0_18px_rgba(34,211,238,0.15)]'
+                      ? 'nav-active-bar bg-[rgba(34,211,238,0.12)] text-[#67e8f9] border border-[rgba(34,211,238,0.4)] shadow-[0_0_18px_rgba(34,211,238,0.15)]'
                       : 'text-neutral-600 border border-transparent hover:bg-[rgba(34,211,238,0.06)] hover:text-neutral-900 hover:border-[rgba(34,211,238,0.2)]'
                   }`}
                 >
@@ -247,7 +245,7 @@ export default function App() {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="hidden border-b border-[var(--color-surface-border)] bg-[var(--color-bg)]/60 backdrop-blur md:block md:px-[var(--space-page-x)] md:py-[var(--space-header-y)]">
+        <header className="header-neon-line hidden border-b border-[var(--color-surface-border)] bg-[var(--color-bg)]/60 backdrop-blur md:block md:px-[var(--space-page-x)] md:py-[var(--space-header-y)]">
           <div className="page-frame flex items-center justify-between gap-4">
             <div>
               <h1 className="page-title">{titleInfo.title}</h1>
@@ -298,7 +296,7 @@ export default function App() {
                 className="relative flex h-9 w-9 items-center justify-center rounded-md border border-[var(--color-surface-border-strong)] bg-[var(--color-surface-2)] text-neutral-600 hover:border-[rgba(34,211,238,0.5)] hover:text-[#67e8f9] transition-colors"
               >
                 <Bell size={16} />
-                <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#ec4899] px-1 text-[9px] font-bold text-white shadow-[0_0_10px_rgba(236,72,153,0.6)]">
+                <span className="pulse-badge absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#ec4899] px-1 text-[9px] font-bold text-white shadow-[0_0_10px_rgba(236,72,153,0.6)]">
                   3
                 </span>
               </button>
@@ -308,7 +306,7 @@ export default function App() {
                 onClick={() => alert('プレビュー版です')}
                 className="flex items-center gap-2 rounded-md border border-[var(--color-surface-border-strong)] bg-[var(--color-surface-2)] px-3 py-1.5 text-left hover:border-[rgba(34,211,238,0.4)] transition-colors"
               >
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-[#22d3ee] to-[#a855f7] text-[10px] font-bold text-[#04111c]">
+                <div className="avatar-flow flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-[#22d3ee] via-[#a855f7] to-[#ec4899] text-[10px] font-bold text-[#04111c]">
                   家
                 </div>
                 <div className="hidden lg:block">

@@ -1014,14 +1014,17 @@ function QuickAction({ label, icon, color, onClick }: QuickActionProps) {
       className="group flex flex-col items-center gap-2"
     >
       <span
-        className="hex-button flex h-14 w-14 items-center justify-center transition-all group-hover:scale-110"
+        className="hex-button hex-spin-on-hover flex h-14 w-14 items-center justify-center"
         style={{
-          background: `linear-gradient(135deg, ${color}33, ${color}11)`,
+          background: `linear-gradient(135deg, ${color}55, ${color}11)`,
           color,
           filter: `drop-shadow(0 0 10px ${color}55)`,
         }}
       >
-        <span className="flex h-12 w-12 items-center justify-center" style={{ color }}>
+        <span
+          className="flex h-12 w-12 items-center justify-center transition-transform group-hover:-rotate-[60deg]"
+          style={{ color }}
+        >
           {icon}
         </span>
       </span>

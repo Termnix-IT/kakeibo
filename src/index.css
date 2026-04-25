@@ -75,8 +75,8 @@
    ビューポート幅に応じて clamp で滑らかに変化する余白トークン。
    モバイル(~375px) → タブレット(~768px) → デスクトップ(~1280px) で連続的にスケール。 */
 :root {
-  --space-page-x: clamp(0.75rem, 2.4vw, 2rem);    /* ページ左右余白 */
-  --space-page-y: clamp(0.75rem, 1.6vw, 1.5rem);  /* ページ上下余白 */
+  --space-page-x: clamp(0.375rem, 1.2vw, 1rem);   /* ページ左右余白（前回の半分） */
+  --space-page-y: clamp(0.5rem, 1vw, 1rem);       /* ページ上下余白 */
   --space-card-x: clamp(0.875rem, 1.4vw + 0.5rem, 1.5rem); /* カード横padding */
   --space-card-y: clamp(0.625rem, 0.8vw + 0.4rem, 1rem);   /* カード縦padding */
   --space-grid-gap: clamp(0.625rem, 1vw + 0.3rem, 1.25rem); /* グリッドgap */
@@ -105,10 +105,56 @@ body {
   font-feature-settings: "palt";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  position: relative;
+}
+
+/* 背景に流れるグリッドラインと走査線 */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(34, 211, 238, 0.025) 0px,
+      rgba(34, 211, 238, 0.025) 1px,
+      transparent 1px,
+      transparent 80px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(168, 85, 247, 0.02) 0px,
+      rgba(168, 85, 247, 0.02) 1px,
+      transparent 1px,
+      transparent 80px
+    );
+  animation: bgGridDrift 28s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(34, 211, 238, 0.04) 48%,
+    rgba(168, 85, 247, 0.05) 50%,
+    rgba(236, 72, 153, 0.04) 52%,
+    transparent 100%
+  );
+  animation: bgScanlineSweep 14s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+  mix-blend-mode: screen;
 }
 
 #root {
   min-height: 100vh;
+  position: relative;
+  z-index: 1;
 }
 
 button,
@@ -145,7 +191,9 @@ textarea {
 .page-frame {
   margin-inline: auto;
   width: 100%;
-  max-width: 84rem;
+  /* 画面いっぱいに広げる。親の <main> 側の padding で左右の呼吸を確保。
+     超広幅でも崩れないよう極端な上限のみ設定。 */
+  max-width: none;
 }
 
 /* レスポンシブ余白用ユーティリティ */
@@ -165,7 +213,11 @@ textarea {
 
 @layer utilities {
   .neon-card {
+    --card-neon-rgb: 34, 211, 238;        /* 既定: cyan */
+    --card-neon-color: rgba(var(--card-neon-rgb), 0.55);
+    --card-neon-strong: rgba(var(--card-neon-rgb), 0.85);
     position: relative;
+    overflow: hidden;
     background: linear-gradient(
       180deg,
       rgba(20, 26, 48, 0.92),
@@ -177,51 +229,126 @@ textarea {
       0 0 0 1px rgba(34, 211, 238, 0.04),
       0 12px 32px rgba(0, 0, 0, 0.45);
     backdrop-filter: blur(8px);
+    animation: cardEnter 0.7s cubic-bezier(0.2, 0.6, 0.2, 1) backwards;
+    transition:
+      transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+      box-shadow 0.35s ease,
+      border-color 0.35s ease;
   }
 
-  .neon-card-cyan {
-    border-color: rgba(34, 211, 238, 0.45);
-    box-shadow:
-      0 0 28px rgba(34, 211, 238, 0.18),
-      inset 0 0 24px rgba(34, 211, 238, 0.05),
-      0 12px 32px rgba(0, 0, 0, 0.45);
+  /* スキャンライン: 上から下へ流れる細い光線 */
+  .neon-card::before {
+    content: '';
+    position: absolute;
+    left: -10%;
+    right: -10%;
+    top: 0%;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--card-neon-strong),
+      transparent
+    );
+    box-shadow: 0 0 12px var(--card-neon-color);
+    opacity: 0;
+    pointer-events: none;
+    animation: neonScan 7.5s ease-in-out infinite;
+    will-change: top, opacity;
   }
-  .neon-card-pink {
-    border-color: rgba(236, 72, 153, 0.45);
-    box-shadow:
-      0 0 28px rgba(236, 72, 153, 0.18),
-      inset 0 0 24px rgba(236, 72, 153, 0.05),
-      0 12px 32px rgba(0, 0, 0, 0.45);
+
+  /* コーナーグロー: 角に光が滲む */
+  .neon-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background:
+      radial-gradient(
+        circle at 0% 0%,
+        var(--card-neon-color),
+        transparent 40%
+      ),
+      radial-gradient(
+        circle at 100% 100%,
+        var(--card-neon-color),
+        transparent 40%
+      );
+    opacity: 0.18;
+    pointer-events: none;
+    animation: neonCornerPulse 5s ease-in-out infinite;
+    will-change: opacity;
   }
-  .neon-card-blue {
-    border-color: rgba(59, 130, 246, 0.45);
+
+  /* スキャンの開始タイミングを散らす */
+  .neon-card:nth-child(2n)::before { animation-delay: -2.5s; }
+  .neon-card:nth-child(3n)::before { animation-delay: -5s; }
+  .neon-card:nth-child(4n)::before { animation-delay: -1.2s; }
+  .neon-card:nth-child(2n)::after { animation-delay: -1.7s; }
+  .neon-card:nth-child(3n)::after { animation-delay: -3.4s; }
+
+  /* ホバー: 浮き上がり + グロー強化 */
+  .neon-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--card-neon-strong);
     box-shadow:
-      0 0 28px rgba(59, 130, 246, 0.18),
-      inset 0 0 24px rgba(59, 130, 246, 0.05),
-      0 12px 32px rgba(0, 0, 0, 0.45);
+      0 0 36px rgba(var(--card-neon-rgb), 0.32),
+      inset 0 0 32px rgba(var(--card-neon-rgb), 0.08),
+      0 18px 48px rgba(0, 0, 0, 0.5);
   }
-  .neon-card-green {
-    border-color: rgba(16, 224, 160, 0.45);
-    box-shadow:
-      0 0 28px rgba(16, 224, 160, 0.18),
-      inset 0 0 24px rgba(16, 224, 160, 0.05),
-      0 12px 32px rgba(0, 0, 0, 0.45);
+  .neon-card:hover::before {
+    animation-duration: 2.5s;
   }
-  .neon-card-purple {
-    border-color: rgba(168, 85, 247, 0.45);
-    box-shadow:
-      0 0 28px rgba(168, 85, 247, 0.18),
-      inset 0 0 24px rgba(168, 85, 247, 0.05),
-      0 12px 32px rgba(0, 0, 0, 0.45);
-  }
+
+  .neon-card-cyan   { --card-neon-rgb: 34, 211, 238; }
+  .neon-card-pink   { --card-neon-rgb: 236, 72, 153; }
+  .neon-card-blue   { --card-neon-rgb: 59, 130, 246; }
+  .neon-card-green  { --card-neon-rgb: 16, 224, 160; }
+  .neon-card-purple { --card-neon-rgb: 168, 85, 247; }
+  .neon-card-orange { --card-neon-rgb: 251, 146, 60; }
+
+  .neon-card-cyan,
+  .neon-card-pink,
+  .neon-card-blue,
+  .neon-card-green,
+  .neon-card-purple,
   .neon-card-orange {
-    border-color: rgba(251, 146, 60, 0.45);
+    border-color: rgba(var(--card-neon-rgb), 0.45);
     box-shadow:
-      0 0 28px rgba(251, 146, 60, 0.18),
-      inset 0 0 24px rgba(251, 146, 60, 0.05),
+      0 0 28px rgba(var(--card-neon-rgb), 0.18),
+      inset 0 0 24px rgba(var(--card-neon-rgb), 0.05),
       0 12px 32px rgba(0, 0, 0, 0.45);
+    animation:
+      cardEnter 0.7s cubic-bezier(0.2, 0.6, 0.2, 1) backwards,
+      neonBorderPulse 4s ease-in-out 0.7s infinite;
   }
 
+  .neon-card-cyan:nth-child(2n),
+  .neon-card-pink:nth-child(2n),
+  .neon-card-blue:nth-child(2n),
+  .neon-card-green:nth-child(2n),
+  .neon-card-purple:nth-child(2n),
+  .neon-card-orange:nth-child(2n) {
+    animation-delay: 0s, -2s;
+  }
+
+  .neon-card-cyan:nth-child(3n),
+  .neon-card-pink:nth-child(3n),
+  .neon-card-blue:nth-child(3n),
+  .neon-card-green:nth-child(3n),
+  .neon-card-purple:nth-child(3n),
+  .neon-card-orange:nth-child(3n) {
+    animation-delay: 0s, -3.2s;
+  }
+
+  .neon-text-cyan,
+  .neon-text-pink,
+  .neon-text-blue,
+  .neon-text-green,
+  .neon-text-purple,
+  .neon-text-orange {
+    animation: neonTextFlicker 9s linear infinite;
+  }
   .neon-text-cyan {
     color: var(--color-neon-cyan);
     text-shadow: 0 0 14px rgba(34, 211, 238, 0.55);
@@ -229,22 +356,27 @@ textarea {
   .neon-text-pink {
     color: var(--color-neon-pink);
     text-shadow: 0 0 14px rgba(236, 72, 153, 0.55);
+    animation-delay: -2.3s;
   }
   .neon-text-blue {
     color: var(--color-neon-blue);
     text-shadow: 0 0 14px rgba(59, 130, 246, 0.55);
+    animation-delay: -4.1s;
   }
   .neon-text-green {
     color: var(--color-neon-green);
     text-shadow: 0 0 14px rgba(16, 224, 160, 0.55);
+    animation-delay: -5.8s;
   }
   .neon-text-purple {
     color: var(--color-neon-purple);
     text-shadow: 0 0 14px rgba(168, 85, 247, 0.55);
+    animation-delay: -3.5s;
   }
   .neon-text-orange {
     color: var(--color-neon-orange);
     text-shadow: 0 0 14px rgba(251, 146, 60, 0.55);
+    animation-delay: -1.4s;
   }
 
   .neon-divider {
@@ -270,6 +402,127 @@ textarea {
     );
   }
 
+  /* ---- ボタン: ホバーで光が左→右へ流れる ---- */
+  .shine-on-hover {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .shine-on-hover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.22) 48%,
+      rgba(255, 255, 255, 0.32) 50%,
+      rgba(255, 255, 255, 0.22) 52%,
+      transparent 70%
+    );
+    transform: translateX(-110%);
+    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.3, 1);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .shine-on-hover:hover::after {
+    transform: translateX(110%);
+  }
+
+  /* ---- 左端で光るアクティブインジケータ（ナビ用） ---- */
+  .nav-active-bar {
+    position: relative;
+  }
+  .nav-active-bar::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 18%;
+    bottom: 18%;
+    width: 3px;
+    border-radius: 2px;
+    background: var(--color-neon-cyan);
+    box-shadow:
+      0 0 10px rgba(34, 211, 238, 0.85),
+      0 0 18px rgba(34, 211, 238, 0.45);
+    animation: navBarPulse 2.2s ease-in-out infinite;
+  }
+
+  /* ---- 進捗バー: 光のストライプが流れる ---- */
+  .progress-flow {
+    position: relative;
+    overflow: hidden;
+  }
+  .progress-flow::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.45) 50%,
+      transparent 100%
+    );
+    transform: translateX(-100%);
+    animation: progressShine 2.6s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  /* ---- 通知バッジ: 脈動 ---- */
+  .pulse-badge {
+    animation: pulseBadge 1.8s ease-in-out infinite;
+  }
+
+  /* ---- 文字グリッチ ---- */
+  .glitch {
+    animation: glitchText 7s steps(1) infinite;
+  }
+
+  /* ---- ヘッダー底のネオンライン ---- */
+  .header-neon-line {
+    position: relative;
+  }
+  .header-neon-line::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(34, 211, 238, 0.6) 25%,
+      rgba(168, 85, 247, 0.7) 50%,
+      rgba(236, 72, 153, 0.6) 75%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: headerLineFlow 8s linear infinite;
+    pointer-events: none;
+  }
+
+  /* ---- 六角形ボタン: ホバーで回転＋発光強化 ---- */
+  .hex-spin-on-hover {
+    transition:
+      transform 0.6s cubic-bezier(0.2, 0.7, 0.3, 1),
+      filter 0.4s ease;
+  }
+  .hex-spin-on-hover:hover {
+    transform: rotate(60deg) scale(1.1);
+  }
+
+  /* ---- アバターのグラデーション流動 ---- */
+  .avatar-flow {
+    background-size: 200% 200%;
+    animation: avatarFlow 6s ease-in-out infinite;
+  }
+
+  /* ---- 軽いネオングローのパルス（汎用） ---- */
+  .glow-pulse {
+    animation: glowPulse 3s ease-in-out infinite;
+  }
+
   .scrollbar-thin {
     scrollbar-width: thin;
     scrollbar-color: rgba(34, 211, 238, 0.3) transparent;
@@ -284,6 +537,173 @@ textarea {
   }
   .scrollbar-thin::-webkit-scrollbar-track {
     background: transparent;
+  }
+}
+
+/* ----- Cyberpunk keyframes ----- */
+
+@keyframes cardEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+    filter: brightness(1.4);
+  }
+  60% {
+    filter: brightness(1.15);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: brightness(1);
+  }
+}
+
+@keyframes neonScan {
+  0% {
+    top: -2px;
+    opacity: 0;
+  }
+  6% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.85;
+  }
+  94% {
+    opacity: 0.4;
+  }
+  100% {
+    top: calc(100% + 2px);
+    opacity: 0;
+  }
+}
+
+@keyframes neonCornerPulse {
+  0%, 100% {
+    opacity: 0.14;
+  }
+  50% {
+    opacity: 0.34;
+  }
+}
+
+@keyframes neonBorderPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 28px rgba(var(--card-neon-rgb), 0.18),
+      inset 0 0 24px rgba(var(--card-neon-rgb), 0.05),
+      0 12px 32px rgba(0, 0, 0, 0.45);
+  }
+  50% {
+    box-shadow:
+      0 0 38px rgba(var(--card-neon-rgb), 0.32),
+      inset 0 0 32px rgba(var(--card-neon-rgb), 0.09),
+      0 12px 32px rgba(0, 0, 0, 0.45);
+  }
+}
+
+@keyframes bgGridDrift {
+  0%   { background-position: 0 0, 0 0; }
+  100% { background-position: 0 80px, 80px 0; }
+}
+
+@keyframes bgScanlineSweep {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  10%  { opacity: 0.6; }
+  50%  { opacity: 0.9; }
+  90%  { opacity: 0.5; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+
+@keyframes navBarPulse {
+  0%, 100% {
+    opacity: 0.75;
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.7), 0 0 16px rgba(34, 211, 238, 0.35);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 14px rgba(34, 211, 238, 1), 0 0 26px rgba(34, 211, 238, 0.55);
+  }
+}
+
+@keyframes progressShine {
+  0% { transform: translateX(-110%); }
+  60%, 100% { transform: translateX(110%); }
+}
+
+@keyframes pulseBadge {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 8px rgba(236, 72, 153, 0.6);
+  }
+  50% {
+    transform: scale(1.18);
+    box-shadow: 0 0 18px rgba(236, 72, 153, 0.85), 0 0 32px rgba(236, 72, 153, 0.4);
+  }
+}
+
+@keyframes glitchText {
+  0%, 90%, 100% { transform: translate(0); }
+  91% { transform: translate(-1px, 0); filter: hue-rotate(15deg); }
+  92% { transform: translate(1px, 0.5px); }
+  93% { transform: translate(-0.5px, -0.5px); }
+  94% { transform: translate(0.5px, 0); filter: hue-rotate(-10deg); }
+  95% { transform: translate(0); filter: none; }
+}
+
+@keyframes headerLineFlow {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+@keyframes avatarFlow {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+@keyframes glowPulse {
+  0%, 100% { filter: drop-shadow(0 0 6px currentColor); }
+  50%      { filter: drop-shadow(0 0 14px currentColor); }
+}
+
+@keyframes neonTextFlicker {
+  0%, 92%, 100% {
+    opacity: 1;
+    text-shadow: 0 0 14px currentColor;
+  }
+  93% {
+    opacity: 0.4;
+    text-shadow: 0 0 4px currentColor;
+  }
+  94% {
+    opacity: 0.95;
+    text-shadow: 0 0 18px currentColor;
+  }
+  95% {
+    opacity: 0.55;
+    text-shadow: 0 0 6px currentColor;
+  }
+  96% {
+    opacity: 1;
+    text-shadow: 0 0 16px currentColor;
+  }
+}
+
+/* モーション低減を希望するユーザーには静的に */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  body::before,
+  body::after {
+    display: none;
+  }
+  .neon-card:hover {
+    transform: none;
   }
 }
 

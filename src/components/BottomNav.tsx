@@ -69,9 +69,9 @@ export function BottomNav({ current, onChange, onAddClick }: Props) {
           type="button"
           onClick={onAddClick}
           aria-label="収支を追加"
-          className="-mt-6 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[#22d3ee] to-[#0891b2] text-[#04111c] shadow-[0_0_20px_rgba(34,211,238,0.5)] transition-transform active:scale-95"
+          className="glow-pulse shine-on-hover -mt-6 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[#22d3ee] to-[#0891b2] text-[#22d3ee] shadow-[0_0_20px_rgba(34,211,238,0.5)] transition-transform active:scale-95"
         >
-          <Plus size={24} strokeWidth={2.5} />
+          <Plus size={24} strokeWidth={2.5} className="text-[#04111c]" />
         </button>
       </div>
       {RIGHT.map((it) => (

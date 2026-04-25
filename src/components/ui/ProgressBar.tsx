@@ -25,7 +25,7 @@ export function ProgressBar({
       className={`w-full overflow-hidden rounded-full bg-[var(--color-surface-2)] ${h} ${className}`}
     >
       <div
-        className={`${h} rounded-full transition-[width]`}
+        className={`progress-flow ${h} rounded-full transition-[width]`}
         style={{
           width: `${pct}%`,
           background: buildGradient(fillColor),
