@@ -1,4 +1,4 @@
-import { Suspense, lazy, useState } from 'react';
+import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import {
   BarChart3,
   Bell,
@@ -130,7 +130,29 @@ export default function App() {
   const [page, setPage] = useState<Page>('dashboard');
   const [month, setMonth] = useState(getCurrentMonth);
   const [showModal, setShowModal] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const titleInfo = PAGE_TITLES[page];
+  const sidebarWidth = sidebarCollapsed ? '4.5rem' : 'clamp(15rem,18vw,18rem)';
+  const headerRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    const setVar = () => {
+      document.documentElement.style.setProperty(
+        '--app-header-height',
+        `${header.offsetHeight}px`
+      );
+    };
+    setVar();
+    const observer = new ResizeObserver(setVar);
+    observer.observe(header);
+    window.addEventListener('resize', setVar);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', setVar);
+    };
+  }, []);
 
   const handleAddTransaction = async (
     data: Omit<Transaction, 'id' | 'createdAt' | 'updatedAt'>
@@ -181,19 +203,104 @@ export default function App() {
   };
 
   return (
-    <div className="flex min-h-screen text-neutral-800">
-      <aside className="hidden shrink-0 md:sticky md:top-0 md:flex md:h-screen md:w-[clamp(15rem,18vw,18rem)] md:flex-col md:justify-between md:border-r md:border-[var(--color-surface-border)] md:bg-[var(--color-surface)]/80 md:backdrop-blur md:px-[var(--space-sidebar-x)] md:py-[var(--space-sidebar-y)]">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2.5 pb-1">
-            <div className="glow-pulse flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-[#22d3ee] to-[#0891b2] shadow-[0_0_18px_rgba(34,211,238,0.5)] text-[#22d3ee]">
-              <Home size={18} className="text-[#04111c]" strokeWidth={2.5} />
-            </div>
-            <div className="min-w-0">
-              <p className="glitch text-base font-bold neon-text-cyan leading-tight">家計簿</p>
-              <p className="text-[10px] text-neutral-500 leading-tight">スマートに管理、未来をつくる</p>
+    <div className="flex min-h-screen flex-col text-neutral-800">
+      <header ref={headerRef} className="header-neon-line fixed inset-x-0 top-0 z-30 hidden border-b border-[var(--color-header-border)] bg-[var(--color-header-bg)] text-[var(--color-header-fg)] md:block md:px-[var(--space-page-x)] md:py-[var(--space-header-y)]">
+        <div className="page-frame flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4 min-w-0">
+            <button
+              type="button"
+              onClick={() => setSidebarCollapsed((v) => !v)}
+              aria-label={sidebarCollapsed ? 'サイドバーを展開' : 'サイドバーを折りたたむ'}
+              aria-expanded={!sidebarCollapsed}
+              className="flex items-center gap-2.5 rounded-md p-1 -m-1 hover:bg-[var(--color-header-control-bg)] transition-colors"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/15 text-[var(--color-header-fg)]">
+                <Home size={18} strokeWidth={2.25} />
+              </div>
+              <div className="min-w-0 text-left">
+                <p className="text-base font-bold leading-tight text-[var(--color-header-fg)]">家計簿</p>
+                <p className="text-[10px] leading-tight text-[var(--color-header-fg-muted)]">スマートに管理、未来をつくる</p>
+              </div>
+            </button>
+            <div className="hidden lg:block h-9 w-px bg-[var(--color-header-control-border)]" />
+            <div className="hidden lg:block min-w-0">
+              <h1 className="page-title !text-[var(--color-header-fg)]">{titleInfo.title}</h1>
+              <p className="mt-0.5 text-sm text-[var(--color-header-fg-muted)] truncate">{titleInfo.subtitle}</p>
             </div>
           </div>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] uppercase tracking-wider text-[var(--color-header-fg-muted)]">対象月</span>
+              <input
+                type="month"
+                value={month}
+                onChange={(e) => setMonth(e.target.value)}
+                className="h-9 rounded-md border border-[var(--color-header-control-border)] bg-[var(--color-header-control-bg)] px-3 text-sm font-semibold tabular-nums text-[var(--color-header-fg)] focus:outline-none focus:ring-2 focus:ring-white/40 [&::-webkit-calendar-picker-indicator]:invert"
+              />
+              <button
+                type="button"
+                onClick={() => setMonth(addMonths(month, -1))}
+                aria-label="前の月"
+                className="flex h-9 w-9 items-center justify-center rounded-md border border-[var(--color-header-control-border)] bg-[var(--color-header-control-bg)] text-[var(--color-header-fg)] hover:bg-[var(--color-header-control-bg-hover)] transition-colors"
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={() => setMonth(addMonths(month, 1))}
+                aria-label="次の月"
+                className="flex h-9 w-9 items-center justify-center rounded-md border border-[var(--color-header-control-border)] bg-[var(--color-header-control-bg)] text-[var(--color-header-fg)] hover:bg-[var(--color-header-control-bg-hover)] transition-colors"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
 
+            <div className="mx-1 h-9 w-px bg-[var(--color-header-control-border)]" />
+
+            <button
+              type="button"
+              onClick={() => alert('プレビュー版です')}
+              aria-label="クイック入力"
+              className="flex h-9 w-9 items-center justify-center rounded-md border border-[var(--color-header-control-border)] bg-[var(--color-header-control-bg)] text-[var(--color-header-fg)] hover:bg-[var(--color-header-control-bg-hover)] transition-colors"
+            >
+              <Sparkles size={16} />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => alert('プレビュー版です')}
+              aria-label="通知"
+              className="relative flex h-9 w-9 items-center justify-center rounded-md border border-[var(--color-header-control-border)] bg-[var(--color-header-control-bg)] text-[var(--color-header-fg)] hover:bg-[var(--color-header-control-bg-hover)] transition-colors"
+            >
+              <Bell size={16} />
+              <span className="pulse-badge absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--color-danger)] px-1 text-[9px] font-bold text-white">
+                3
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => alert('プレビュー版です')}
+              className="flex items-center gap-2 rounded-md border border-[var(--color-header-control-border)] bg-[var(--color-header-control-bg)] px-3 py-1.5 text-left hover:bg-[var(--color-header-control-bg-hover)] transition-colors"
+            >
+              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[10px] font-bold text-[var(--color-primary-dark)]">
+                家
+              </div>
+              <div className="hidden lg:block">
+                <p className="text-xs font-semibold leading-tight text-[var(--color-header-fg)]">家計 太郎</p>
+                <p className="text-[10px] leading-tight text-[var(--color-header-fg-muted)]">プレミアムプラン</p>
+              </div>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div className="flex min-h-0 flex-1 md:pt-[var(--app-header-height,4rem)]">
+        <aside
+          style={{ width: sidebarWidth }}
+          className="hidden shrink-0 transition-[width] duration-200 ease-out md:fixed md:left-0 md:top-[var(--app-header-height,4rem)] md:flex md:h-[calc(100vh-var(--app-header-height,4rem))] md:flex-col md:justify-between md:border-r md:border-[var(--color-surface-border)] md:bg-[var(--color-surface)]/80 md:backdrop-blur md:px-[var(--space-sidebar-x)] md:py-[var(--space-sidebar-y)]"
+        >
+        <div className="space-y-2">
           <nav className="space-y-0.5">
             {NAV_ITEMS.map(({ id, label, caption, icon: Icon }) => {
               const active = page === id;
@@ -202,10 +309,14 @@ export default function App() {
                   key={id}
                   type="button"
                   onClick={() => setPage(id)}
-                  className={`group flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-left text-sm transition-all ${
+                  title={sidebarCollapsed ? label : undefined}
+                  aria-label={sidebarCollapsed ? label : undefined}
+                  className={`group flex w-full items-center gap-2.5 rounded-md py-1.5 text-left text-sm transition-all ${
+                    sidebarCollapsed ? 'justify-center px-0' : 'px-2.5'
+                  } ${
                     active
-                      ? 'nav-active-bar bg-[rgba(34,211,238,0.12)] text-[#67e8f9] border border-[rgba(34,211,238,0.4)] shadow-[0_0_18px_rgba(34,211,238,0.15)]'
-                      : 'text-neutral-600 border border-transparent hover:bg-[rgba(34,211,238,0.06)] hover:text-neutral-900 hover:border-[rgba(34,211,238,0.2)]'
+                      ? 'nav-active-bar bg-[var(--color-primary-subtle)] text-[var(--color-primary-dark)] border border-[var(--color-primary-border)]'
+                      : 'text-neutral-600 border border-transparent hover:bg-[var(--color-primary-subtle)] hover:text-[var(--color-primary-dark)] hover:border-[var(--color-primary-border)]'
                   }`}
                 >
                   <Icon
@@ -213,114 +324,51 @@ export default function App() {
                     strokeWidth={active ? 2.25 : 2}
                     className={active ? '' : 'text-neutral-500 group-hover:text-neutral-700'}
                   />
-                  <div className="flex-1 min-w-0 leading-tight">
-                    <p className="font-medium">{label}</p>
-                    <p className={`text-[10px] leading-tight ${active ? 'text-[#67e8f9]/70' : 'text-neutral-500'}`}>
-                      {caption}
-                    </p>
-                  </div>
+                  {!sidebarCollapsed && (
+                    <div className="flex-1 min-w-0 leading-tight">
+                      <p className="font-medium">{label}</p>
+                      <p className={`text-[10px] leading-tight ${active ? 'text-[var(--color-primary)]/80' : 'text-neutral-500'}`}>
+                        {caption}
+                      </p>
+                    </div>
+                  )}
                 </button>
               );
             })}
           </nav>
         </div>
 
-        {/* プレミアムプランカード */}
-        <div className="neon-card neon-card-purple p-3 text-center">
+        {/* プレミアムプラン */}
+        <div className="text-center">
           <div className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(168,85,247,0.18)] border border-[rgba(168,85,247,0.5)]">
             <Gem size={16} className="text-[#c4b5fd]" />
           </div>
-          <p className="mt-1.5 text-sm font-bold neon-text-purple leading-tight">プレミアムプラン</p>
-          <p className="mt-0.5 text-[10px] text-neutral-500 leading-snug">
-            高度な分析と連携機能を利用
-          </p>
-          <button
-            type="button"
-            onClick={() => alert('プレビュー版です')}
-            className="mt-2 w-full rounded-md bg-gradient-to-r from-[#a855f7] to-[#7c3aed] px-3 py-1.5 text-xs font-semibold text-white shadow-[0_0_14px_rgba(168,85,247,0.4)] hover:shadow-[0_0_20px_rgba(168,85,247,0.6)] transition-shadow"
-          >
-            プランをアップグレード
-          </button>
+          {!sidebarCollapsed && (
+            <>
+              <p className="mt-1.5 text-sm font-bold neon-text-purple leading-tight">プレミアムプラン</p>
+              <p className="mt-0.5 text-[10px] text-neutral-500 leading-snug">
+                高度な分析と連携機能を利用
+              </p>
+              <button
+                type="button"
+                onClick={() => alert('プレビュー版です')}
+                className="mt-2 w-full rounded-md bg-gradient-to-r from-[#a855f7] to-[#7c3aed] px-3 py-1.5 text-xs font-semibold text-white shadow-[0_0_14px_rgba(168,85,247,0.4)] hover:shadow-[0_0_20px_rgba(168,85,247,0.6)] transition-shadow"
+              >
+                プランをアップグレード
+              </button>
+            </>
+          )}
         </div>
       </aside>
 
-      <div className="flex min-w-0 flex-1 flex-col">
-        <header className="header-neon-line hidden border-b border-[var(--color-surface-border)] bg-[var(--color-bg)]/60 backdrop-blur md:block md:px-[var(--space-page-x)] md:py-[var(--space-header-y)]">
-          <div className="page-frame flex items-center justify-between gap-4">
-            <div>
-              <h1 className="page-title">{titleInfo.title}</h1>
-              <p className="mt-0.5 text-sm text-neutral-500">{titleInfo.subtitle}</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] uppercase tracking-wider text-neutral-500">対象月</span>
-                <input
-                  type="month"
-                  value={month}
-                  onChange={(e) => setMonth(e.target.value)}
-                  className="h-9 rounded-md border border-[var(--color-surface-border-strong)] bg-[var(--color-surface-2)] px-3 text-sm font-semibold tabular-nums text-neutral-900 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
-                />
-                <button
-                  type="button"
-                  onClick={() => setMonth(addMonths(month, -1))}
-                  aria-label="前の月"
-                  className="flex h-9 w-9 items-center justify-center rounded-md border border-[var(--color-surface-border-strong)] bg-[var(--color-surface-2)] text-neutral-600 hover:border-[rgba(34,211,238,0.5)] hover:text-[#67e8f9] transition-colors"
-                >
-                  <ChevronLeft size={16} />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setMonth(addMonths(month, 1))}
-                  aria-label="次の月"
-                  className="flex h-9 w-9 items-center justify-center rounded-md border border-[var(--color-surface-border-strong)] bg-[var(--color-surface-2)] text-neutral-600 hover:border-[rgba(34,211,238,0.5)] hover:text-[#67e8f9] transition-colors"
-                >
-                  <ChevronRight size={16} />
-                </button>
-              </div>
+        <div
+          style={{ marginLeft: sidebarWidth }}
+          className="flex min-w-0 flex-1 flex-col transition-[margin] duration-200 ease-out max-md:!ml-0"
+        >
+          <main className="flex-1 overflow-hidden md:px-[var(--space-page-x)] md:py-[var(--space-page-y)]">{renderPage()}</main>
 
-              <div className="mx-1 h-9 w-px bg-[var(--color-surface-border)]" />
-
-              <button
-                type="button"
-                onClick={() => alert('プレビュー版です')}
-                aria-label="クイック入力"
-                className="flex h-9 w-9 items-center justify-center rounded-md border border-[rgba(251,146,60,0.45)] bg-[rgba(251,146,60,0.1)] text-[#fdba74] hover:shadow-[0_0_14px_rgba(251,146,60,0.35)] transition-shadow"
-              >
-                <Sparkles size={16} />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => alert('プレビュー版です')}
-                aria-label="通知"
-                className="relative flex h-9 w-9 items-center justify-center rounded-md border border-[var(--color-surface-border-strong)] bg-[var(--color-surface-2)] text-neutral-600 hover:border-[rgba(34,211,238,0.5)] hover:text-[#67e8f9] transition-colors"
-              >
-                <Bell size={16} />
-                <span className="pulse-badge absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#ec4899] px-1 text-[9px] font-bold text-white shadow-[0_0_10px_rgba(236,72,153,0.6)]">
-                  3
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => alert('プレビュー版です')}
-                className="flex items-center gap-2 rounded-md border border-[var(--color-surface-border-strong)] bg-[var(--color-surface-2)] px-3 py-1.5 text-left hover:border-[rgba(34,211,238,0.4)] transition-colors"
-              >
-                <div className="avatar-flow flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-[#22d3ee] via-[#a855f7] to-[#ec4899] text-[10px] font-bold text-[#04111c]">
-                  家
-                </div>
-                <div className="hidden lg:block">
-                  <p className="text-xs font-semibold text-neutral-900 leading-tight">家計 太郎</p>
-                  <p className="text-[10px] text-neutral-500 leading-tight">プレミアムプラン</p>
-                </div>
-              </button>
-            </div>
-          </div>
-        </header>
-
-        <main className="flex-1 overflow-hidden md:px-[var(--space-page-x)] md:py-[var(--space-page-y)]">{renderPage()}</main>
-
-        <BottomNav current={page} onChange={setPage} onAddClick={() => setShowModal(true)} />
+          <BottomNav current={page} onChange={setPage} onAddClick={() => setShowModal(true)} />
+        </div>
       </div>
 
       {showModal && (

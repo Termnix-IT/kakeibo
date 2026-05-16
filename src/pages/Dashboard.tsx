@@ -517,29 +517,29 @@ export function Dashboard({ month, onMonthChange: _onMonthChange, onQuickAdd, on
   return (
     <div className="h-full overflow-y-auto scrollbar-thin pb-24 md:pb-6">
       <div className="page-frame space-y-section pad-page md:p-0">
-        {/* Row 1: KPI 4枚 */}
-        <div className="grid grid-cols-1 gap-grid sm:grid-cols-2 xl:grid-cols-4">
-          {kpis.map((kpi) => {
-            const Icon = kpi.icon;
-            const sparkColor =
-              kpi.tone === 'cyan'
-                ? '#22d3ee'
-                : kpi.tone === 'pink'
-                  ? '#ec4899'
-                  : kpi.tone === 'blue'
-                    ? '#3b82f6'
-                    : '#10e0a0';
-            const valueClass =
-              kpi.tone === 'cyan'
-                ? 'neon-text-cyan'
-                : kpi.tone === 'pink'
-                  ? 'neon-text-pink'
-                  : kpi.tone === 'blue'
-                    ? 'neon-text-blue'
-                    : 'neon-text-green';
-            return (
-              <Card key={kpi.label} tone={kpi.tone}>
-                <CardBody className="relative overflow-hidden">
+        {/* Row 1: KPI まとめカード */}
+        <Card>
+          <CardBody className="grid grid-cols-1 divide-y divide-[var(--color-surface-border)] sm:grid-cols-2 sm:divide-y-0 xl:grid-cols-4 sm:[&>*:nth-child(even)]:border-l sm:[&>*:nth-child(even)]:border-[var(--color-surface-border)] xl:[&>*]:border-l xl:[&>*]:border-[var(--color-surface-border)] xl:[&>*:first-child]:border-l-0 !p-0">
+            {kpis.map((kpi) => {
+              const Icon = kpi.icon;
+              const sparkColor =
+                kpi.tone === 'cyan'
+                  ? '#4a7c59'    // sage
+                  : kpi.tone === 'pink'
+                    ? '#87a878'  // moss
+                    : kpi.tone === 'blue'
+                      ? '#3d8071' // teal-green
+                      : '#5fa371'; // fresh
+              const valueClass =
+                kpi.tone === 'cyan'
+                  ? 'neon-text-cyan'
+                  : kpi.tone === 'pink'
+                    ? 'neon-text-pink'
+                    : kpi.tone === 'blue'
+                      ? 'neon-text-blue'
+                      : 'neon-text-green';
+              return (
+                <div key={kpi.label} className="pad-card">
                   <p className="text-[11px] font-medium uppercase tracking-wider text-neutral-500">
                     {kpi.label}
                   </p>
@@ -562,11 +562,11 @@ export function Dashboard({ month, onMonthChange: _onMonthChange, onQuickAdd, on
                   >
                     {kpi.deltaLabel}
                   </p>
-                </CardBody>
-              </Card>
-            );
-          })}
-        </div>
+                </div>
+              );
+            })}
+          </CardBody>
+        </Card>
 
         {/* Row 2: グラフ3枚 */}
         <div className="grid grid-cols-1 gap-grid lg:grid-cols-[2fr_1fr_1fr]">
@@ -663,11 +663,16 @@ export function Dashboard({ month, onMonthChange: _onMonthChange, onQuickAdd, on
           </Card>
 
           {/* Donut */}
-          <Card>
-            <CardHeader>
-              <CardTitle>支出カテゴリ内訳</CardTitle>
-            </CardHeader>
-            <CardBody>
+          <section>
+            <h3 className="text-sm font-semibold text-neutral-900">支出カテゴリ内訳</h3>
+            <button
+              type="button"
+              onClick={() => onNavigate('report')}
+              className="mt-0.5 mb-3 text-[11px] font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-dark)]"
+            >
+              カテゴリ別レポートを見る →
+            </button>
+            <div>
               {donutData.length === 0 ? (
                 <p className="py-12 text-center text-sm text-neutral-500">
                   今月の支出データがありません
@@ -725,29 +730,20 @@ export function Dashboard({ month, onMonthChange: _onMonthChange, onQuickAdd, on
                   </ul>
                 </>
               )}
-              <button
-                type="button"
-                onClick={() => onNavigate('report')}
-                className="mt-3 w-full rounded-md border border-[var(--color-surface-border-strong)] bg-[var(--color-surface-2)]/40 py-2 text-xs text-neutral-700 hover:border-[rgba(34,211,238,0.45)] hover:text-[#67e8f9] transition-colors"
-              >
-                カテゴリ別レポートを見る →
-              </button>
-            </CardBody>
-          </Card>
+            </div>
+          </section>
 
           {/* Budget */}
-          <Card>
-            <CardHeader>
-              <CardTitle>予算進捗</CardTitle>
-              <button
-                type="button"
-                onClick={() => onNavigate('budget')}
-                className="text-[11px] font-medium text-[#67e8f9] hover:text-[#22d3ee]"
-              >
-                予算管理へ
-              </button>
-            </CardHeader>
-            <CardBody className="space-y-3">
+          <section>
+            <h3 className="text-sm font-semibold text-neutral-900">予算進捗</h3>
+            <button
+              type="button"
+              onClick={() => onNavigate('budget')}
+              className="mt-0.5 mb-3 text-[11px] font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-dark)]"
+            >
+              予算管理へ →
+            </button>
+            <div className="space-y-3">
               {budgetRows.length === 0 ? (
                 <p className="py-6 text-center text-sm text-neutral-500">
                   予算が設定されていません
@@ -777,13 +773,6 @@ export function Dashboard({ month, onMonthChange: _onMonthChange, onQuickAdd, on
                   );
                 })
               )}
-              <button
-                type="button"
-                onClick={() => onNavigate('budget')}
-                className="mt-3 w-full rounded-md border border-[var(--color-surface-border-strong)] bg-[var(--color-surface-2)]/40 py-2 text-xs text-neutral-700 hover:border-[rgba(34,211,238,0.45)] hover:text-[#67e8f9] transition-colors"
-              >
-                すべての予算を確認 →
-              </button>
               {alertRows.length > 0 && (
                 <div className="mt-1 flex flex-wrap gap-1">
                   {alertRows.slice(0, 3).map((r) => (
@@ -793,173 +782,154 @@ export function Dashboard({ month, onMonthChange: _onMonthChange, onQuickAdd, on
                   ))}
                 </div>
               )}
-            </CardBody>
-          </Card>
+            </div>
+          </section>
         </div>
 
-        {/* Row 3: ボトム4枚 */}
-        <div className="grid grid-cols-1 gap-grid lg:grid-cols-[1.6fr_1fr_1fr_1fr]">
+        {/* Row 3: ボトム4セクション(カードなし) */}
+        <div className="grid grid-cols-1 gap-grid lg:grid-cols-[1.6fr_1fr_1fr_1fr] border-t border-[var(--color-surface-border)] pt-6">
           {/* Recent transactions */}
-          <Card>
-            <CardHeader>
-              <CardTitle>最近の取引</CardTitle>
-              <button
-                type="button"
-                onClick={() => onNavigate('transactions')}
-                className="text-[11px] font-medium text-[#67e8f9] hover:text-[#22d3ee]"
-              >
-                すべて見る
-              </button>
-            </CardHeader>
-            <CardBody className="px-0">
-              {recentTxs.length === 0 ? (
-                <p className="pad-card-x py-6 text-center text-sm text-neutral-500">
-                  今月の取引はまだありません
-                </p>
-              ) : (
-                <ul className="divide-y divide-[var(--color-surface-border)]">
-                  {recentTxs.map((tx) => {
-                    const cat = catMap[tx.categoryId];
-                    return (
-                      <li key={tx.id} className="flex items-center gap-3 pad-card-x py-2.5 hover:bg-[rgba(34,211,238,0.03)] transition-colors">
-                        <span
-                          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-sm"
-                          style={{
-                            backgroundColor: `${cat?.color ?? '#888'}22`,
-                            border: `1px solid ${cat?.color ?? '#888'}66`,
-                          }}
-                        >
-                          {cat?.icon ?? '📦'}
-                        </span>
-                        <div className="min-w-0 flex-1">
-                          <p className="truncate text-sm text-neutral-800">
-                            {tx.memo || cat?.name || '取引'}
-                          </p>
-                          <p className="text-[11px] text-neutral-500 tabular-nums">
-                            {tx.date.slice(5).replace('-', '/')}
-                          </p>
-                        </div>
-                        <Badge tone={tx.type === 'income' ? 'income' : 'expense'} size="sm">
-                          {tx.type === 'income' ? '収入' : '支出'}
-                        </Badge>
-                        <span
-                          className={`shrink-0 text-sm font-semibold tabular-nums ${
-                            tx.type === 'income' ? 'text-income' : 'text-expense'
-                          }`}
-                        >
-                          {tx.type === 'income' ? '+' : '-'}¥{tx.amount.toLocaleString()}
-                        </span>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
-              <div className="mt-2 pad-card-x">
-                <button
-                  type="button"
-                  onClick={() => onNavigate('transactions')}
-                  className="w-full rounded-md border border-[var(--color-surface-border-strong)] bg-[var(--color-surface-2)]/40 py-2 text-xs text-neutral-700 hover:border-[rgba(34,211,238,0.45)] hover:text-[#67e8f9] transition-colors"
-                >
-                  すべての取引を見る →
-                </button>
-              </div>
-            </CardBody>
-          </Card>
+          <section>
+            <h3 className="text-sm font-semibold text-neutral-900">最近の取引</h3>
+            <button
+              type="button"
+              onClick={() => onNavigate('transactions')}
+              className="mt-0.5 mb-3 text-[11px] font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-dark)]"
+            >
+              すべて見る →
+            </button>
+            {recentTxs.length === 0 ? (
+              <p className="py-6 text-center text-sm text-neutral-500">
+                今月の取引はまだありません
+              </p>
+            ) : (
+              <ul className="divide-y divide-[var(--color-surface-border)]">
+                {recentTxs.map((tx) => {
+                  const cat = catMap[tx.categoryId];
+                  return (
+                    <li key={tx.id} className="flex items-center gap-3 py-2.5">
+                      <span
+                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-sm"
+                        style={{
+                          backgroundColor: `${cat?.color ?? '#888'}22`,
+                          border: `1px solid ${cat?.color ?? '#888'}66`,
+                        }}
+                      >
+                        {cat?.icon ?? '📦'}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm text-neutral-800">
+                          {tx.memo || cat?.name || '取引'}
+                        </p>
+                        <p className="text-[11px] text-neutral-500 tabular-nums">
+                          {tx.date.slice(5).replace('-', '/')}
+                        </p>
+                      </div>
+                      <Badge tone={tx.type === 'income' ? 'income' : 'expense'} size="sm">
+                        {tx.type === 'income' ? '収入' : '支出'}
+                      </Badge>
+                      <span
+                        className={`shrink-0 text-sm font-semibold tabular-nums ${
+                          tx.type === 'income' ? 'text-income' : 'text-expense'
+                        }`}
+                      >
+                        {tx.type === 'income' ? '+' : '-'}¥{tx.amount.toLocaleString()}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </section>
 
           {/* Asset summary (dummy) */}
-          <Card tone="cyan">
-            <CardHeader>
-              <CardTitle>資産サマリー</CardTitle>
-            </CardHeader>
-            <CardBody className="space-y-3">
-              <div>
-                <p className="text-[10px] uppercase tracking-wider text-neutral-500">資産総額</p>
-                <p className="mt-1 text-2xl font-bold neon-text-cyan tabular-nums">¥3,245,780</p>
-                <p className="mt-1 text-[11px] tabular-nums text-success">前月比 +¥68,230 (+2.1%)</p>
+          <section>
+            <h3 className="text-sm font-semibold text-neutral-900">資産サマリー</h3>
+            <button
+              type="button"
+              onClick={() => onNavigate('assets')}
+              className="mt-0.5 mb-3 text-[11px] font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-dark)]"
+            >
+              資産管理へ →
+            </button>
+            <p className="text-[10px] uppercase tracking-wider text-neutral-500">資産総額</p>
+            <p className="mt-1 text-2xl font-bold neon-text-cyan tabular-nums">¥3,245,780</p>
+            <p className="mt-1 text-[11px] tabular-nums text-success">前月比 +¥68,230 (+2.1%)</p>
+            <div className="mt-3 space-y-2 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-1.5 text-neutral-700">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#4a7c59] shadow-[0_0_6px_rgba(74,124,89,0.5)]" />
+                  銀行口座
+                </span>
+                <span className="tabular-nums text-neutral-800">¥1,234,560</span>
               </div>
-              <div className="border-t border-[var(--color-surface-border)] pt-3 space-y-2 text-xs">
-                <p className="text-[10px] uppercase tracking-wider text-neutral-500">内訳</p>
-                <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-1.5 text-neutral-700">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#22d3ee] shadow-[0_0_6px_#22d3ee]" />
-                    銀行口座
-                  </span>
-                  <span className="tabular-nums text-neutral-800">¥1,234,560</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-1.5 text-neutral-700">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#a855f7] shadow-[0_0_6px_#a855f7]" />
-                    投資信託
-                  </span>
-                  <span className="tabular-nums text-neutral-800">¥1,456,780</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-1.5 text-neutral-700">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#10e0a0] shadow-[0_0_6px_#10e0a0]" />
-                    現金・その他
-                  </span>
-                  <span className="tabular-nums text-neutral-800">¥554,440</span>
-                </div>
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-1.5 text-neutral-700">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#87a878] shadow-[0_0_6px_rgba(135,168,120,0.5)]" />
+                  投資信託
+                </span>
+                <span className="tabular-nums text-neutral-800">¥1,456,780</span>
               </div>
-              <button
-                type="button"
-                onClick={() => onNavigate('assets')}
-                className="mt-2 w-full rounded-md border border-[var(--color-surface-border-strong)] bg-[var(--color-surface-2)]/40 py-2 text-xs text-neutral-700 hover:border-[rgba(34,211,238,0.45)] hover:text-[#67e8f9] transition-colors"
-              >
-                資産管理へ →
-              </button>
-            </CardBody>
-          </Card>
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-1.5 text-neutral-700">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#5fa371] shadow-[0_0_6px_rgba(95,163,113,0.5)]" />
+                  現金・その他
+                </span>
+                <span className="tabular-nums text-neutral-800">¥554,440</span>
+              </div>
+            </div>
+          </section>
 
           {/* Quick actions */}
-          <Card>
-            <CardHeader>
-              <CardTitle>クイックアクション</CardTitle>
-            </CardHeader>
-            <CardBody>
-              <div className="grid grid-cols-2 gap-3">
-                <QuickAction
-                  label="収入を追加"
-                  icon={<Plus size={20} />}
-                  color="#22d3ee"
-                  onClick={onQuickAdd}
-                />
-                <QuickAction
-                  label="支出を追加"
-                  icon={<Plus size={20} />}
-                  color="#ec4899"
-                  onClick={onQuickAdd}
-                />
-                <QuickAction
-                  label="振替"
-                  icon={<ArrowLeftRight size={20} />}
-                  color="#a855f7"
-                  onClick={() => alert('プレビュー版です')}
-                />
-                <QuickAction
-                  label="予算を設定"
-                  icon={<Target size={20} />}
-                  color="#fb923c"
-                  onClick={() => onNavigate('budget')}
-                />
-              </div>
-            </CardBody>
-          </Card>
+          <section>
+            <h3 className="mb-3 text-sm font-semibold text-neutral-900">クイックアクション</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <QuickAction
+                label="収入を追加"
+                icon={<Plus size={20} />}
+                color="#4a7c59"
+                onClick={onQuickAdd}
+              />
+              <QuickAction
+                label="支出を追加"
+                icon={<Plus size={20} />}
+                color="#b45838"
+                onClick={onQuickAdd}
+              />
+              <QuickAction
+                label="振替"
+                icon={<ArrowLeftRight size={20} />}
+                color="#3d8071"
+                onClick={() => alert('プレビュー版です')}
+              />
+              <QuickAction
+                label="予算を設定"
+                icon={<Target size={20} />}
+                color="#c98a3a"
+                onClick={() => onNavigate('budget')}
+              />
+            </div>
+          </section>
 
           {/* Insights */}
-          <Card tone="purple">
-            <CardHeader>
-              <CardTitle>今月のインサイト</CardTitle>
-            </CardHeader>
-            <CardBody className="space-y-3">
+          <section>
+            <h3 className="text-sm font-semibold text-neutral-900">今月のインサイト</h3>
+            <button
+              type="button"
+              onClick={() => onNavigate('report')}
+              className="mt-0.5 mb-3 text-[11px] font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-dark)]"
+            >
+              もっと見る →
+            </button>
+            <div className="space-y-3">
               {insights.slice(0, 3).map((ins, i) => {
                 const Icon = ins.icon;
                 const colorClass =
                   ins.tone === 'cyan'
-                    ? 'text-[#67e8f9] border-[rgba(34,211,238,0.4)] bg-[rgba(34,211,238,0.06)]'
+                    ? 'text-[#3d6649] border-[rgba(74,124,89,0.35)] bg-[rgba(74,124,89,0.06)]'
                     : ins.tone === 'green'
-                      ? 'text-[#5eead4] border-[rgba(16,224,160,0.4)] bg-[rgba(16,224,160,0.06)]'
-                      : 'text-[#fdba74] border-[rgba(251,146,60,0.4)] bg-[rgba(251,146,60,0.06)]';
+                      ? 'text-[#2d5237] border-[rgba(95,163,113,0.35)] bg-[rgba(95,163,113,0.06)]'
+                      : 'text-[#8a5a28] border-[rgba(201,138,58,0.40)] bg-[rgba(201,138,58,0.08)]';
                 return (
                   <div
                     key={i}
@@ -973,15 +943,8 @@ export function Dashboard({ month, onMonthChange: _onMonthChange, onQuickAdd, on
                   </div>
                 );
               })}
-              <button
-                type="button"
-                onClick={() => onNavigate('report')}
-                className="w-full rounded-md border border-[var(--color-surface-border-strong)] bg-[var(--color-surface-2)]/40 py-2 text-xs text-neutral-700 hover:border-[rgba(168,85,247,0.45)] hover:text-[#c4b5fd] transition-colors"
-              >
-                インサイトをもっと見る →
-              </button>
-            </CardBody>
-          </Card>
+            </div>
+          </section>
         </div>
       </div>
 

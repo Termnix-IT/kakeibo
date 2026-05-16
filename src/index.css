@@ -1,54 +1,61 @@
 @import "tailwindcss";
 
 @theme {
-  /* Neutral scale — inverted for dark theme.
-     既存クラス (bg-neutral-50 / text-neutral-900 等) を流用するため、
-     0..900 の階層を「暗→明」に再マッピング。 */
-  --color-neutral-50: #060916;   /* 旧: 最明 → 最暗 (page bg) */
-  --color-neutral-100: #0d1224;  /* card surface */
-  --color-neutral-200: #1f2842;  /* divider / soft border */
-  --color-neutral-300: #2a3454;  /* strong border */
-  --color-neutral-400: #5a6280;  /* faint icon */
-  --color-neutral-500: #8a93ab;  /* muted text */
-  --color-neutral-600: #b1b8cd;  /* secondary text */
-  --color-neutral-700: #d0d6e3;  /* body text */
-  --color-neutral-800: #e7eaf3;  /* heading */
-  --color-neutral-900: #f5f7ff;  /* high-emphasis */
+  /* Neutral scale — light theme (low = light bg, high = dark text). */
+  --color-neutral-50: #fafaf8;   /* page bg */
+  --color-neutral-100: #ffffff;  /* card surface */
+  --color-neutral-200: #f3f4f0;  /* divider / soft border */
+  --color-neutral-300: #e5e7e0;  /* strong border */
+  --color-neutral-400: #9ca3a0;  /* faint icon */
+  --color-neutral-500: #6b7280;  /* muted text */
+  --color-neutral-600: #4b5563;  /* secondary text */
+  --color-neutral-700: #374151;  /* body text */
+  --color-neutral-800: #1f2937;  /* heading */
+  --color-neutral-900: #111827;  /* high-emphasis */
 
-  /* Brand & semantic — neon palette */
-  --color-primary: #22d3ee;
-  --color-primary-hover: #06b6d4;
-  --color-primary-dark: #0891b2;
-  --color-primary-subtle: rgba(34, 211, 238, 0.12);
-  --color-primary-border: rgba(34, 211, 238, 0.45);
+  /* Brand & semantic — sage green palette */
+  --color-primary: #4a7c59;
+  --color-primary-hover: #3d6649;
+  --color-primary-dark: #2d5237;
+  --color-primary-subtle: rgba(74, 124, 89, 0.10);
+  --color-primary-border: rgba(74, 124, 89, 0.40);
 
-  --color-income: #22d3ee;
-  --color-income-subtle: rgba(34, 211, 238, 0.10);
-  --color-expense: #ec4899;
-  --color-expense-subtle: rgba(236, 72, 153, 0.10);
-  --color-success: #10e0a0;
-  --color-success-subtle: rgba(16, 224, 160, 0.10);
-  --color-warning: #fb923c;
-  --color-warning-subtle: rgba(251, 146, 60, 0.12);
-  --color-warning-border: rgba(251, 146, 60, 0.45);
-  --color-danger: #ec4899;
+  --color-income: #4a7c59;
+  --color-income-subtle: rgba(74, 124, 89, 0.10);
+  --color-expense: #b45838;       /* terracotta — semantic contrast in eco palette */
+  --color-expense-subtle: rgba(180, 88, 56, 0.10);
+  --color-success: #5fa371;
+  --color-success-subtle: rgba(95, 163, 113, 0.10);
+  --color-warning: #c98a3a;
+  --color-warning-subtle: rgba(201, 138, 58, 0.12);
+  --color-warning-border: rgba(201, 138, 58, 0.45);
+  --color-danger: #b45838;
 
-  /* Surfaces (新規) */
-  --color-bg: #060916;
-  --color-surface: #0d1224;
-  --color-surface-2: #141a30;
-  --color-surface-3: #1a223a;
-  --color-surface-border: #1f2842;
-  --color-surface-border-strong: #2a3454;
+  /* Surfaces */
+  --color-bg: #fafaf8;
+  --color-surface: #ffffff;
+  --color-surface-2: #f7f8f4;
+  --color-surface-3: #eef0ea;
+  --color-surface-border: #e5e7e0;
+  --color-surface-border-strong: #d4d7cd;
 
-  /* Neon palette (KPIカードや装飾用) */
-  --color-neon-cyan: #22d3ee;
-  --color-neon-pink: #ec4899;
-  --color-neon-blue: #3b82f6;
-  --color-neon-green: #10e0a0;
-  --color-neon-purple: #a855f7;
-  --color-neon-orange: #fb923c;
-  --color-neon-yellow: #facc15;
+  /* Header */
+  --color-header-bg: #4a7c59;
+  --color-header-fg: #f5f7f2;
+  --color-header-fg-muted: rgba(245, 247, 242, 0.78);
+  --color-header-border: #3d6649;
+  --color-header-control-bg: rgba(255, 255, 255, 0.12);
+  --color-header-control-bg-hover: rgba(255, 255, 255, 0.20);
+  --color-header-control-border: rgba(255, 255, 255, 0.22);
+
+  /* "Neon" palette — green-unified (legacy class names kept for compatibility) */
+  --color-neon-cyan: #4a7c59;    /* sage */
+  --color-neon-pink: #87a878;    /* moss */
+  --color-neon-blue: #3d8071;    /* teal-green */
+  --color-neon-green: #5fa371;   /* fresh */
+  --color-neon-purple: #6b9b76;  /* mint */
+  --color-neon-orange: #c98a3a;  /* amber accent (warning) */
+  --color-neon-yellow: #b8a040;
 
   /* Radius scale */
   --radius-xs: 4px;
@@ -61,14 +68,14 @@
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 
   /* Chart palette */
-  --chart-1: #22d3ee;
-  --chart-2: #ec4899;
-  --chart-3: #10e0a0;
-  --chart-4: #a855f7;
-  --chart-5: #fb923c;
-  --chart-6: #facc15;
-  --chart-grid: #1f2842;
-  --chart-axis: #5a6280;
+  --chart-1: #4a7c59;
+  --chart-2: #b45838;
+  --chart-3: #5fa371;
+  --chart-4: #87a878;
+  --chart-5: #c98a3a;
+  --chart-6: #6b9b76;
+  --chart-grid: #e5e7e0;
+  --chart-axis: #9ca3a0;
 }
 
 /* ----- Responsive spacing tokens -----
@@ -92,11 +99,7 @@ html {
 
 body {
   min-height: 100vh;
-  background:
-    radial-gradient(ellipse at 0% 0%, rgba(34, 211, 238, 0.08), transparent 50%),
-    radial-gradient(ellipse at 100% 100%, rgba(168, 85, 247, 0.08), transparent 55%),
-    radial-gradient(ellipse at 50% 50%, rgba(236, 72, 153, 0.04), transparent 60%),
-    var(--color-bg);
+  background: var(--color-bg);
   background-attachment: fixed;
   color: var(--color-neutral-800);
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue",
@@ -108,48 +111,9 @@ body {
   position: relative;
 }
 
-/* 背景に流れるグリッドラインと走査線 */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background:
-    repeating-linear-gradient(
-      0deg,
-      rgba(34, 211, 238, 0.025) 0px,
-      rgba(34, 211, 238, 0.025) 1px,
-      transparent 1px,
-      transparent 80px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      rgba(168, 85, 247, 0.02) 0px,
-      rgba(168, 85, 247, 0.02) 1px,
-      transparent 1px,
-      transparent 80px
-    );
-  animation: bgGridDrift 28s linear infinite;
-  pointer-events: none;
-  z-index: 0;
-}
-
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    rgba(34, 211, 238, 0.04) 48%,
-    rgba(168, 85, 247, 0.05) 50%,
-    rgba(236, 72, 153, 0.04) 52%,
-    transparent 100%
-  );
-  animation: bgScanlineSweep 14s ease-in-out infinite;
-  pointer-events: none;
-  z-index: 0;
-  mix-blend-mode: screen;
-}
+/* 背景パターンは廃止 (eco minimal) */
+body::before,
+body::after { content: none; }
 
 #root {
   min-height: 100vh;
@@ -213,22 +177,17 @@ textarea {
 
 @layer utilities {
   .neon-card {
-    --card-neon-rgb: 34, 211, 238;        /* 既定: cyan */
-    --card-neon-color: rgba(var(--card-neon-rgb), 0.55);
-    --card-neon-strong: rgba(var(--card-neon-rgb), 0.85);
+    --card-neon-rgb: 74, 124, 89;         /* 既定: sage */
+    --card-neon-color: rgba(var(--card-neon-rgb), 0.40);
+    --card-neon-strong: rgba(var(--card-neon-rgb), 0.75);
     position: relative;
     overflow: hidden;
-    background: linear-gradient(
-      180deg,
-      rgba(20, 26, 48, 0.92),
-      rgba(13, 18, 36, 0.92)
-    );
+    background: var(--color-surface);
     border: 1px solid var(--color-surface-border);
     border-radius: 14px;
     box-shadow:
-      0 0 0 1px rgba(34, 211, 238, 0.04),
-      0 12px 32px rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(8px);
+      0 1px 2px rgba(17, 24, 39, 0.04),
+      0 6px 16px rgba(17, 24, 39, 0.06);
     animation: cardEnter 0.7s cubic-bezier(0.2, 0.6, 0.2, 1) backwards;
     transition:
       transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
@@ -274,7 +233,7 @@ textarea {
         var(--card-neon-color),
         transparent 40%
       );
-    opacity: 0.18;
+    opacity: 0.10;
     pointer-events: none;
     animation: neonCornerPulse 5s ease-in-out infinite;
     will-change: opacity;
@@ -289,23 +248,24 @@ textarea {
 
   /* ホバー: 浮き上がり + グロー強化 */
   .neon-card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
     border-color: var(--card-neon-strong);
     box-shadow:
-      0 0 36px rgba(var(--card-neon-rgb), 0.32),
-      inset 0 0 32px rgba(var(--card-neon-rgb), 0.08),
-      0 18px 48px rgba(0, 0, 0, 0.5);
+      0 0 24px rgba(var(--card-neon-rgb), 0.22),
+      inset 0 0 24px rgba(var(--card-neon-rgb), 0.05),
+      0 12px 28px rgba(17, 24, 39, 0.10);
   }
   .neon-card:hover::before {
     animation-duration: 2.5s;
   }
 
-  .neon-card-cyan   { --card-neon-rgb: 34, 211, 238; }
-  .neon-card-pink   { --card-neon-rgb: 236, 72, 153; }
-  .neon-card-blue   { --card-neon-rgb: 59, 130, 246; }
-  .neon-card-green  { --card-neon-rgb: 16, 224, 160; }
-  .neon-card-purple { --card-neon-rgb: 168, 85, 247; }
-  .neon-card-orange { --card-neon-rgb: 251, 146, 60; }
+  /* グリーン統一: 全 tone を異なる緑系にマッピング */
+  .neon-card-cyan   { --card-neon-rgb: 74, 124, 89; }   /* sage */
+  .neon-card-pink   { --card-neon-rgb: 135, 168, 120; } /* moss */
+  .neon-card-blue   { --card-neon-rgb: 61, 128, 113; }  /* teal-green */
+  .neon-card-green  { --card-neon-rgb: 95, 163, 113; }  /* fresh */
+  .neon-card-purple { --card-neon-rgb: 107, 155, 118; } /* mint */
+  .neon-card-orange { --card-neon-rgb: 201, 138, 58; }  /* amber */
 
   .neon-card-cyan,
   .neon-card-pink,
@@ -313,11 +273,11 @@ textarea {
   .neon-card-green,
   .neon-card-purple,
   .neon-card-orange {
-    border-color: rgba(var(--card-neon-rgb), 0.45);
+    border-color: rgba(var(--card-neon-rgb), 0.30);
     box-shadow:
-      0 0 28px rgba(var(--card-neon-rgb), 0.18),
-      inset 0 0 24px rgba(var(--card-neon-rgb), 0.05),
-      0 12px 32px rgba(0, 0, 0, 0.45);
+      0 0 20px rgba(var(--card-neon-rgb), 0.10),
+      inset 0 0 16px rgba(var(--card-neon-rgb), 0.03),
+      0 6px 16px rgba(17, 24, 39, 0.06);
     animation:
       cardEnter 0.7s cubic-bezier(0.2, 0.6, 0.2, 1) backwards,
       neonBorderPulse 4s ease-in-out 0.7s infinite;
@@ -341,49 +301,19 @@ textarea {
     animation-delay: 0s, -3.2s;
   }
 
-  .neon-text-cyan,
-  .neon-text-pink,
-  .neon-text-blue,
-  .neon-text-green,
-  .neon-text-purple,
-  .neon-text-orange {
-    animation: neonTextFlicker 9s linear infinite;
-  }
-  .neon-text-cyan {
-    color: var(--color-neon-cyan);
-    text-shadow: 0 0 14px rgba(34, 211, 238, 0.55);
-  }
-  .neon-text-pink {
-    color: var(--color-neon-pink);
-    text-shadow: 0 0 14px rgba(236, 72, 153, 0.55);
-    animation-delay: -2.3s;
-  }
-  .neon-text-blue {
-    color: var(--color-neon-blue);
-    text-shadow: 0 0 14px rgba(59, 130, 246, 0.55);
-    animation-delay: -4.1s;
-  }
-  .neon-text-green {
-    color: var(--color-neon-green);
-    text-shadow: 0 0 14px rgba(16, 224, 160, 0.55);
-    animation-delay: -5.8s;
-  }
-  .neon-text-purple {
-    color: var(--color-neon-purple);
-    text-shadow: 0 0 14px rgba(168, 85, 247, 0.55);
-    animation-delay: -3.5s;
-  }
-  .neon-text-orange {
-    color: var(--color-neon-orange);
-    text-shadow: 0 0 14px rgba(251, 146, 60, 0.55);
-    animation-delay: -1.4s;
-  }
+  /* グロー廃止: 色相のみで識別 */
+  .neon-text-cyan   { color: var(--color-neon-cyan); }
+  .neon-text-pink   { color: var(--color-neon-pink); }
+  .neon-text-blue   { color: var(--color-neon-blue); }
+  .neon-text-green  { color: var(--color-neon-green); }
+  .neon-text-purple { color: var(--color-neon-purple); }
+  .neon-text-orange { color: var(--color-neon-orange); }
 
   .neon-divider {
     background: linear-gradient(
       90deg,
       transparent,
-      rgba(34, 211, 238, 0.4),
+      rgba(74, 124, 89, 0.35),
       transparent
     );
     height: 1px;
@@ -441,10 +371,10 @@ textarea {
     bottom: 18%;
     width: 3px;
     border-radius: 2px;
-    background: var(--color-neon-cyan);
+    background: var(--color-primary);
     box-shadow:
-      0 0 10px rgba(34, 211, 238, 0.85),
-      0 0 18px rgba(34, 211, 238, 0.45);
+      0 0 8px rgba(74, 124, 89, 0.55),
+      0 0 14px rgba(74, 124, 89, 0.30);
     animation: navBarPulse 2.2s ease-in-out infinite;
   }
 
@@ -479,7 +409,7 @@ textarea {
   }
 
   /* ---- ヘッダー底のネオンライン ---- */
-  .header-neon-line {
+  .header-neon-line:not(.fixed, .absolute, .sticky) {
     position: relative;
   }
   .header-neon-line::after {
@@ -492,9 +422,9 @@ textarea {
     background: linear-gradient(
       90deg,
       transparent 0%,
-      rgba(34, 211, 238, 0.6) 25%,
-      rgba(168, 85, 247, 0.7) 50%,
-      rgba(236, 72, 153, 0.6) 75%,
+      rgba(135, 168, 120, 0.55) 25%,
+      rgba(74, 124, 89, 0.85) 50%,
+      rgba(95, 163, 113, 0.55) 75%,
       transparent 100%
     );
     background-size: 200% 100%;
@@ -525,14 +455,14 @@ textarea {
 
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: rgba(34, 211, 238, 0.3) transparent;
+    scrollbar-color: rgba(74, 124, 89, 0.3) transparent;
   }
   .scrollbar-thin::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: rgba(34, 211, 238, 0.25);
+    background: rgba(74, 124, 89, 0.25);
     border-radius: 3px;
   }
   .scrollbar-thin::-webkit-scrollbar-track {
@@ -618,11 +548,11 @@ textarea {
 @keyframes navBarPulse {
   0%, 100% {
     opacity: 0.75;
-    box-shadow: 0 0 10px rgba(34, 211, 238, 0.7), 0 0 16px rgba(34, 211, 238, 0.35);
+    box-shadow: 0 0 8px rgba(74, 124, 89, 0.55), 0 0 14px rgba(74, 124, 89, 0.30);
   }
   50% {
     opacity: 1;
-    box-shadow: 0 0 14px rgba(34, 211, 238, 1), 0 0 26px rgba(34, 211, 238, 0.55);
+    box-shadow: 0 0 12px rgba(74, 124, 89, 0.85), 0 0 22px rgba(74, 124, 89, 0.45);
   }
 }
 
@@ -634,11 +564,11 @@ textarea {
 @keyframes pulseBadge {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 0 8px rgba(236, 72, 153, 0.6);
+    box-shadow: 0 0 6px rgba(180, 88, 56, 0.55);
   }
   50% {
     transform: scale(1.18);
-    box-shadow: 0 0 18px rgba(236, 72, 153, 0.85), 0 0 32px rgba(236, 72, 153, 0.4);
+    box-shadow: 0 0 14px rgba(180, 88, 56, 0.85), 0 0 24px rgba(180, 88, 56, 0.40);
   }
 }
 
@@ -710,7 +640,7 @@ textarea {
 /* Recharts のデフォルトスタイル微調整 */
 .recharts-default-tooltip {
   background-color: var(--color-surface) !important;
-  border: 1px solid rgba(34, 211, 238, 0.4) !important;
+  border: 1px solid rgba(74, 124, 89, 0.35) !important;
   border-radius: 8px !important;
   color: var(--color-neutral-800) !important;
 }
@@ -722,6 +652,6 @@ textarea {
 
 input[type="month"]::-webkit-calendar-picker-indicator,
 input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(0.8) hue-rotate(160deg);
   cursor: pointer;
+  opacity: 0.6;
 }
