@@ -30,23 +30,15 @@ function NavButton({
   onClick: () => void;
 }) {
   const Icon = item.icon;
-  const color = active ? 'text-[#67e8f9]' : 'text-neutral-500';
+  const color = active ? 'text-[var(--color-primary-dark)]' : 'text-neutral-500';
   return (
     <button
       type="button"
       onClick={onClick}
       className={`flex flex-1 flex-col items-center gap-0 py-1.5 transition-colors ${color}`}
     >
-      <Icon
-        size={20}
-        strokeWidth={active ? 2.25 : 2}
-        style={
-          active
-            ? { filter: 'drop-shadow(0 0 6px rgba(34,211,238,0.6))' }
-            : undefined
-        }
-      />
-      <span className={`text-[10px] font-medium ${active ? 'text-[#67e8f9]' : 'text-neutral-500'}`}>
+      <Icon size={20} strokeWidth={active ? 2.25 : 2} />
+      <span className={`text-[10px] font-medium ${active ? 'text-[var(--color-primary-dark)]' : 'text-neutral-500'}`}>
         {item.label}
       </span>
     </button>
@@ -69,9 +61,9 @@ export function BottomNav({ current, onChange, onAddClick }: Props) {
           type="button"
           onClick={onAddClick}
           aria-label="収支を追加"
-          className="glow-pulse shine-on-hover -mt-6 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[#22d3ee] to-[#0891b2] text-[#22d3ee] shadow-[0_0_20px_rgba(34,211,238,0.5)] transition-transform active:scale-95"
+          className="shine-on-hover -mt-6 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-primary)] shadow-[0_4px_14px_rgba(74,124,89,0.45)] transition-transform active:scale-95"
         >
-          <Plus size={24} strokeWidth={2.5} className="text-[#04111c]" />
+          <Plus size={24} strokeWidth={2.5} className="text-white" />
         </button>
       </div>
       {RIGHT.map((it) => (

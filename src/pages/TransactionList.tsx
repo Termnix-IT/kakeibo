@@ -301,18 +301,14 @@ export function TransactionList({ month, onMonthChange }: Props) {
             onEditTransaction={setEditingTx}
           />
         ) : grouped.length === 0 ? (
-          <Card>
-            <CardBody>
-              <div className="flex h-44 flex-col items-center justify-center gap-2 text-neutral-400">
-                <span className="text-4xl">{hasFilter ? '🔍' : '📭'}</span>
-                <p className="text-sm">
-                  {hasFilter ? '条件に一致する取引がありません' : '取引がありません'}
-                </p>
-              </div>
-            </CardBody>
-          </Card>
+          <div className="flex h-44 flex-col items-center justify-center gap-2 text-neutral-400 border-t border-[var(--color-surface-border)]">
+            <span className="text-4xl">{hasFilter ? '🔍' : '📭'}</span>
+            <p className="text-sm">
+              {hasFilter ? '条件に一致する取引がありません' : '取引がありません'}
+            </p>
+          </div>
         ) : (
-          <Card>
+          <div className="border-t border-[var(--color-surface-border)]">
             <div className="divide-y divide-neutral-100">
               {grouped.map(({ date, items }) => {
                 const d = new Date(date);
@@ -395,7 +391,7 @@ export function TransactionList({ month, onMonthChange }: Props) {
                 );
               })}
             </div>
-          </Card>
+          </div>
         )}
       </div>
 

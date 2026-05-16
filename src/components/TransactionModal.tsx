@@ -81,7 +81,7 @@ export function TransactionModal({ onClose, onSave, defaultDate, initial }: Prop
                     ? t === 'expense'
                       ? 'bg-expense text-white'
                       : 'bg-income text-white'
-                    : 'bg-[var(--color-surface-2)] text-neutral-600 hover:bg-[rgba(34,211,238,0.06)]'
+                    : 'bg-[var(--color-surface-2)] text-neutral-600 hover:bg-[var(--color-primary-subtle)]'
                 }`}
               >
                 {t === 'expense' ? '支出' : '収入'}
@@ -94,8 +94,8 @@ export function TransactionModal({ onClose, onSave, defaultDate, initial }: Prop
         <div
           className={`rounded-md border px-4 py-5 ${
             isExpense
-              ? 'bg-expense-subtle border-[rgba(236,72,153,0.45)]'
-              : 'bg-income-subtle border-[rgba(34,211,238,0.45)]'
+              ? 'bg-expense-subtle border-[rgba(180,88,56,0.45)]'
+              : 'bg-income-subtle border-[var(--color-primary-border)]'
           }`}
         >
           <p className="mb-2 text-center text-[11px] font-medium uppercase tracking-wider text-neutral-500">
@@ -134,7 +134,7 @@ export function TransactionModal({ onClose, onSave, defaultDate, initial }: Prop
                   className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
                     selected
                       ? 'text-white border-transparent'
-                      : 'border-[var(--color-surface-border-strong)] bg-[var(--color-surface-2)] text-neutral-700 hover:border-[rgba(34,211,238,0.4)]'
+                      : 'border-[var(--color-surface-border-strong)] bg-[var(--color-surface-2)] text-neutral-700 hover:border-[var(--color-primary-border)]'
                   }`}
                   style={
                     selected

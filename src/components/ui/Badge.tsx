@@ -19,15 +19,15 @@ const TONE: Record<BadgeTone, string> = {
   neutral:
     'bg-[var(--color-surface-2)] text-neutral-700 border border-[var(--color-surface-border-strong)]',
   income:
-    'bg-[rgba(34,211,238,0.12)] text-[#67e8f9] border border-[rgba(34,211,238,0.45)]',
+    'bg-[rgba(74,124,89,0.10)] text-[#2d5237] border border-[rgba(74,124,89,0.35)]',
   expense:
-    'bg-[rgba(236,72,153,0.12)] text-[#f9a8d4] border border-[rgba(236,72,153,0.45)]',
+    'bg-[rgba(180,88,56,0.10)] text-[#8a4128] border border-[rgba(180,88,56,0.35)]',
   success:
-    'bg-[rgba(16,224,160,0.12)] text-[#5eead4] border border-[rgba(16,224,160,0.45)]',
+    'bg-[rgba(95,163,113,0.10)] text-[#2d5237] border border-[rgba(95,163,113,0.35)]',
   warning:
-    'bg-[rgba(251,146,60,0.12)] text-[#fdba74] border border-[rgba(251,146,60,0.45)]',
+    'bg-[rgba(201,138,58,0.12)] text-[#8a5a28] border border-[rgba(201,138,58,0.40)]',
   primary:
-    'bg-[rgba(34,211,238,0.12)] text-[#67e8f9] border border-[rgba(34,211,238,0.45)]',
+    'bg-[var(--color-primary-subtle)] text-[var(--color-primary-dark)] border border-[var(--color-primary-border)]',
 };
 
 const SIZE: Record<BadgeSize, string> = {

@@ -19,7 +19,7 @@ export function ProgressBar({
 }: ProgressBarProps) {
   const pct = max <= 0 ? 0 : Math.max(0, Math.min(1, value / max)) * 100;
   const h = size === 'sm' ? 'h-1.5' : 'h-2';
-  const fillColor = color ?? '#22d3ee';
+  const fillColor = color ?? '#4a7c59';
   return (
     <div
       className={`w-full overflow-hidden rounded-full bg-[var(--color-surface-2)] ${h} ${className}`}

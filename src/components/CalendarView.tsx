@@ -97,7 +97,7 @@ export function CalendarView({
               : 0;
             const heatStyle =
               heatOpacity > 0 && !isSelected
-                ? { backgroundColor: `rgba(236,72,153,${heatOpacity})` }
+                ? { backgroundColor: `rgba(180,88,56,${heatOpacity})` }
                 : {};
 
             return (
@@ -105,7 +105,7 @@ export function CalendarView({
                 key={dateStr}
                 onClick={() => onDaySelect(dateStr)}
                 className={`flex min-h-[68px] flex-col items-center gap-0.5 border-b border-r border-neutral-100 p-1.5 transition-colors md:min-h-[76px] ${
-                  isSelected ? 'bg-[rgba(34,211,238,0.12)]' : 'hover:bg-[rgba(34,211,238,0.06)]'
+                  isSelected ? 'bg-[var(--color-primary-subtle)]' : 'hover:bg-[var(--color-primary-subtle)]'
                 }`}
                 style={heatStyle}
               >

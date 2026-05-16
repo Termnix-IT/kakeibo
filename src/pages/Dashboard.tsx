@@ -86,9 +86,9 @@ function compareRate(current: number, baseline: number) {
 }
 
 function progressColor(pct: number) {
-  if (pct < 60) return '#10e0a0';
-  if (pct < 80) return '#fb923c';
-  return '#ec4899';
+  if (pct < 60) return '#5fa371'; // fresh green
+  if (pct < 80) return '#c98a3a'; // amber
+  return '#b45838'; // terracotta
 }
 
 type CategoryDetailProps = {

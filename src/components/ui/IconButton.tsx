@@ -13,9 +13,9 @@ const SIZE = {
 
 const TONE = {
   neutral:
-    'text-neutral-500 hover:bg-[rgba(34,211,238,0.1)] hover:text-neutral-900 border border-transparent hover:border-[rgba(34,211,238,0.3)]',
+    'text-neutral-500 hover:bg-[var(--color-primary-subtle)] hover:text-[var(--color-primary-dark)] border border-transparent hover:border-[var(--color-primary-border)]',
   danger:
-    'text-neutral-500 hover:bg-[rgba(236,72,153,0.12)] hover:text-expense border border-transparent hover:border-[rgba(236,72,153,0.4)]',
+    'text-neutral-500 hover:bg-[rgba(180,88,56,0.10)] hover:text-expense border border-transparent hover:border-[rgba(180,88,56,0.40)]',
 };
 
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(

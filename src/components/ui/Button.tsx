@@ -17,13 +17,13 @@ const BASE =
 
 const VARIANTS: Record<ButtonVariant, string> = {
   primary:
-    'bg-gradient-to-r from-[#22d3ee] to-[#0891b2] text-[#04111c] hover:from-[#67e8f9] hover:to-[#06b6d4] hover:shadow-[0_0_18px_rgba(34,211,238,0.45)]',
+    'bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)]',
   secondary:
-    'border border-[rgba(34,211,238,0.35)] bg-[rgba(34,211,238,0.06)] text-neutral-800 hover:bg-[rgba(34,211,238,0.12)] hover:border-[rgba(34,211,238,0.6)]',
+    'border border-[var(--color-primary-border)] bg-[var(--color-primary-subtle)] text-[var(--color-primary-dark)] hover:bg-[rgba(74,124,89,0.18)]',
   ghost:
-    'text-neutral-600 hover:bg-[rgba(34,211,238,0.08)] hover:text-neutral-900',
+    'text-neutral-600 hover:bg-[var(--color-primary-subtle)] hover:text-[var(--color-primary-dark)]',
   danger:
-    'bg-gradient-to-r from-[#ec4899] to-[#be185d] text-white hover:shadow-[0_0_18px_rgba(236,72,153,0.45)]',
+    'bg-[var(--color-danger)] text-white hover:opacity-90',
 };
 
 const SIZES: Record<ButtonSize, string> = {

@@ -36,7 +36,7 @@ export function Tabs<T extends string>({
             onClick={() => onChange(it.value)}
             className={`inline-flex items-center justify-center rounded-[6px] font-medium transition-all ${SIZE[size]} ${
               active
-                ? 'bg-[rgba(34,211,238,0.15)] text-[#67e8f9] shadow-[0_0_12px_rgba(34,211,238,0.3)] border border-[rgba(34,211,238,0.4)]'
+                ? 'bg-[var(--color-primary-subtle)] text-[var(--color-primary-dark)] border border-[var(--color-primary-border)]'
                 : 'text-neutral-500 hover:text-neutral-800 border border-transparent'
             }`}
           >

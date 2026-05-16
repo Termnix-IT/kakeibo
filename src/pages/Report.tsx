@@ -267,11 +267,9 @@ function MonthlyReport({
         </CardBody>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>比較</CardTitle>
-        </CardHeader>
-        <CardBody className="grid grid-cols-1 divide-y divide-neutral-200 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+      <section className="border-t border-[var(--color-surface-border)] pt-4">
+        <h3 className="mb-3 text-sm font-semibold text-neutral-900">比較</h3>
+        <div className="grid grid-cols-1 divide-y divide-[var(--color-surface-border)] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
           {comparisonRows.map((row) => {
             const goodPrev = row.goodIsDown ? row.vsPrev <= 0 : row.vsPrev >= 0;
             const goodAvg = row.goodIsDown ? row.vsAverage <= 0 : row.vsAverage >= 0;
@@ -327,8 +325,8 @@ function MonthlyReport({
               </div>
             );
           })}
-        </CardBody>
-      </Card>
+        </div>
+      </section>
 
       <div className="grid grid-cols-1 gap-grid md:grid-cols-2">
         <Card>

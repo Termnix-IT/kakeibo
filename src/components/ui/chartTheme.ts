@@ -1,39 +1,39 @@
 import type { CSSProperties } from 'react';
 
 export const chartPalette = [
-  '#22d3ee',
-  '#ec4899',
-  '#10e0a0',
-  '#a855f7',
-  '#fb923c',
-  '#facc15',
-  '#3b82f6',
-  '#f472b6',
+  '#4a7c59', // sage
+  '#b45838', // terracotta
+  '#5fa371', // fresh green
+  '#87a878', // moss
+  '#c98a3a', // amber
+  '#b8a040', // mustard
+  '#3d8071', // teal-green
+  '#6b9b76', // mint
 ];
 
 export const chartColors = {
-  primary: '#22d3ee',
-  income: '#22d3ee',
-  expense: '#ec4899',
-  balance: '#3b82f6',
-  success: '#10e0a0',
-  warning: '#fb923c',
-  grid: '#1f2842',
-  axis: '#5a6280',
+  primary: '#4a7c59',
+  income: '#4a7c59',
+  expense: '#b45838',
+  balance: '#3d8071',
+  success: '#5fa371',
+  warning: '#c98a3a',
+  grid: '#e5e7e0',
+  axis: '#9ca3a0',
 };
 
 export const chartTooltipStyle: CSSProperties = {
-  border: '1px solid rgba(34, 211, 238, 0.4)',
+  border: '1px solid rgba(74, 124, 89, 0.35)',
   borderRadius: 8,
-  backgroundColor: '#0d1224',
-  boxShadow: '0 0 18px rgba(34, 211, 238, 0.2), 0 8px 24px rgba(0, 0, 0, 0.5)',
+  backgroundColor: '#ffffff',
+  boxShadow: '0 4px 16px rgba(17, 24, 39, 0.08)',
   fontSize: 12,
-  color: '#e7eaf3',
+  color: '#1f2937',
 };
 
 export const chartAxisTick = { fontSize: 11, fill: chartColors.axis };
 
 export const chartLabelStyle: CSSProperties = {
-  color: '#e7eaf3',
+  color: '#1f2937',
   fontWeight: 500,
 };

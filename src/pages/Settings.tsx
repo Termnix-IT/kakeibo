@@ -64,9 +64,9 @@ const TYPE_OPTIONS: { value: Category['type']; label: string }[] = [
 ];
 
 const PRESET_COLORS = [
-  '#2563eb', '#1d4ed8', '#1e40af', '#047857',
-  '#d97706', '#b45309', '#b91c1c', '#64748b',
-  '#0891b2', '#7c3aed', '#059669', '#334155',
+  '#4a7c59', '#5fa371', '#87a878', '#3d8071',
+  '#6b9b76', '#2d5237', '#b45838', '#c98a3a',
+  '#8a5a28', '#b8a040', '#64748b', '#334155',
 ];
 
 const FALLBACK_CATEGORY_ID = 'cat-other';
@@ -74,7 +74,7 @@ const FALLBACK_CATEGORY_ID = 'cat-other';
 function CategoryModal({ initial, existingNames, onClose, onSave }: CategoryModalProps) {
   const [name, setName] = useState(initial?.name ?? '');
   const [icon, setIcon] = useState(initial?.icon ?? '📦');
-  const [color, setColor] = useState(initial?.color ?? '#2563eb');
+  const [color, setColor] = useState(initial?.color ?? '#4a7c59');
   const [type, setType] = useState<Category['type']>(initial?.type ?? 'expense');
   const [error, setError] = useState('');
 
@@ -163,7 +163,7 @@ function CategoryModal({ initial, existingNames, onClose, onSave }: CategoryModa
                 className={`h-9 rounded-md border text-sm font-medium transition-colors ${
                   type === opt.value
                     ? 'border-primary bg-primary-subtle text-primary'
-                    : 'border-[var(--color-surface-border-strong)] bg-[var(--color-surface-2)] text-neutral-700 hover:border-[rgba(34,211,238,0.4)] hover:text-neutral-900'
+                    : 'border-[var(--color-surface-border-strong)] bg-[var(--color-surface-2)] text-neutral-700 hover:border-[var(--color-primary-border)] hover:text-neutral-900'
                 }`}
               >
                 {opt.label}
@@ -187,7 +187,7 @@ type GoalModalProps = {
 function SavingsGoalModal({ initial, onClose, onSave }: GoalModalProps) {
   const [name, setName] = useState(initial?.name ?? '');
   const [icon, setIcon] = useState(initial?.icon ?? '🎯');
-  const [color, setColor] = useState(initial?.color ?? '#2563eb');
+  const [color, setColor] = useState(initial?.color ?? '#4a7c59');
   const [target, setTarget] = useState(
     initial?.targetAmount ? String(initial.targetAmount) : ''
   );
@@ -426,7 +426,7 @@ function BankImportModal({ categories, onClose }: BankImportProps) {
                   className={`rounded-md border px-3 py-2 text-sm transition-colors ${
                     format === f.id
                       ? 'border-primary bg-primary-subtle text-primary font-medium'
-                      : 'border-[var(--color-surface-border-strong)] bg-[var(--color-surface-2)] text-neutral-700 hover:border-[rgba(34,211,238,0.4)] hover:text-neutral-900'
+                      : 'border-[var(--color-surface-border-strong)] bg-[var(--color-surface-2)] text-neutral-700 hover:border-[var(--color-primary-border)] hover:text-neutral-900'
                   }`}
                 >
                   {f.name}

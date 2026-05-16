@@ -98,10 +98,10 @@ function AssetsComingSoon() {
   return (
     <div className="page-frame pad-page md:p-0">
       <div className="neon-card neon-card-purple p-[clamp(1.5rem,4vw,2.5rem)] text-center">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(168,85,247,0.15)] border border-[rgba(168,85,247,0.5)]">
-          <Landmark size={28} className="text-[#c4b5fd]" />
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-primary-subtle)] border border-[var(--color-primary-border)]">
+          <Landmark size={28} className="text-[var(--color-primary-dark)]" />
         </div>
-        <h2 className="mt-4 text-xl font-bold neon-text-purple">資産管理（プレビュー）</h2>
+        <h2 className="mt-4 text-xl font-bold text-[var(--color-primary-dark)]">資産管理（プレビュー）</h2>
         <p className="mt-2 text-sm text-neutral-500 leading-relaxed">
           銀行口座 / 投資信託 / 現金などの資産を一元管理する機能を準備中です。
           <br />
@@ -340,19 +340,19 @@ export default function App() {
 
         {/* プレミアムプラン */}
         <div className="text-center">
-          <div className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(168,85,247,0.18)] border border-[rgba(168,85,247,0.5)]">
-            <Gem size={16} className="text-[#c4b5fd]" />
+          <div className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-primary-subtle)] border border-[var(--color-primary-border)]">
+            <Gem size={16} className="text-[var(--color-primary-dark)]" />
           </div>
           {!sidebarCollapsed && (
             <>
-              <p className="mt-1.5 text-sm font-bold neon-text-purple leading-tight">プレミアムプラン</p>
+              <p className="mt-1.5 text-sm font-bold text-[var(--color-primary-dark)] leading-tight">プレミアムプラン</p>
               <p className="mt-0.5 text-[10px] text-neutral-500 leading-snug">
                 高度な分析と連携機能を利用
               </p>
               <button
                 type="button"
                 onClick={() => alert('プレビュー版です')}
-                className="mt-2 w-full rounded-md bg-gradient-to-r from-[#a855f7] to-[#7c3aed] px-3 py-1.5 text-xs font-semibold text-white shadow-[0_0_14px_rgba(168,85,247,0.4)] hover:shadow-[0_0_20px_rgba(168,85,247,0.6)] transition-shadow"
+                className="mt-2 w-full rounded-md bg-[var(--color-primary)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--color-primary-hover)] transition-colors"
               >
                 プランをアップグレード
               </button>

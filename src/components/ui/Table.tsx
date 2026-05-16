@@ -37,7 +37,7 @@ export function TR({ className, ...rest }: HTMLAttributes<HTMLTableRowElement>) 
   return (
     <tr
       className={cx(
-        'border-b border-[var(--color-surface-border)] hover:bg-[rgba(34,211,238,0.05)] transition-colors',
+        'border-b border-[var(--color-surface-border)] hover:bg-[var(--color-primary-subtle)] transition-colors',
         className
       )}
       {...rest}
